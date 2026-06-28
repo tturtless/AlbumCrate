@@ -121,6 +121,8 @@
   .detail-chip select{background:none;border:none;color:var(--cream);font-family:'Courier Prime',monospace;font-size:13px;cursor:pointer;outline:none;padding:0;appearance:none;width:auto}
   .detail-chip select:focus{color:var(--gold)}
   /* Condition chip — red/empty until set */
+  .detail-remove-btn{background:none;border:1px solid var(--border);border-radius:3px;color:var(--cream-dim);font-size:14px;padding:6px 10px;cursor:pointer;transition:border-color .15s,color .15s,background .15s;display:flex;align-items:center;gap:5px;font-family:'Inter',sans-serif;font-size:11px;font-weight:600;margin-left:auto}
+  .detail-remove-btn:hover{border-color:var(--red-bright);color:var(--red-bright);background:rgba(192,57,43,.08)}
   #conditionChip.unset{border-color:var(--red-bright);background:rgba(192,57,43,.08)}
   #conditionChip.unset label{color:var(--red-bright)}
   #conditionChip.unset select{color:var(--red-bright)}
@@ -419,6 +421,9 @@
             <div class="detail-genre-pill" id="modalGenre" onclick="openGenreEditor()" style="cursor:pointer;user-select:none" title="Click to change genre">✎ <span id="modalGenreText"></span></div>
             <button class="detail-heart-btn" id="detailHeartBtn" onclick="toggleFavoriteFromModal()">
               <span id="detailHeartIcon">♡</span><span id="detailHeartLabel">Favorite</span>
+            </button>
+            <button class="detail-remove-btn" id="detailRemoveBtn" onclick="removeFromCrateFromModal()" title="Remove from Crate">
+              <span>🗑</span><span>Remove</span>
             </button>
           </div>
           <div id="genreEditorWrap" style="display:none;margin-bottom:8px">
@@ -1343,6 +1348,11 @@ function deleteAlbum(id){
   const idx=vinylCollection.findIndex(x=>x.id===id);if(idx!==-1)vinylCollection.splice(idx,1);
   const ua=lsGet("crate_user_albums",[]).filter(x=>x.id!==id);lsSet("crate_user_albums",ua);
   favorites.delete(id);saveFavorites();buildFilters();render();showToast("Record removed from crate");
+  document.getElementById("detailModal").classList.remove("open");currentDetailId=null;
+}
+function removeFromCrateFromModal(){
+  if(currentDetailId==null)return;
+  deleteAlbum(currentDetailId);
 }
 
 // ── DETAIL MODAL ──
