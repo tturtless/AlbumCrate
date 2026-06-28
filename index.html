@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=0.75, maximum-scale=5.0">
 <title>The Crate — Vinyl Collection</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Inter:wght@300;400;500;600&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
 <style>
@@ -21,17 +21,18 @@
   .logo{font-family:'Playfair Display',serif;font-size:22px;font-weight:900;color:var(--gold);letter-spacing:.04em;white-space:nowrap;flex-shrink:0}
   .logo span{color:var(--cream-dim);font-style:italic;font-weight:400;font-size:13px;margin-left:8px;letter-spacing:.08em}
   .header-search{flex:1;max-width:380px;position:relative}
-  .header-search input{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:4px;color:var(--cream);font-family:'Inter',sans-serif;font-size:13px;padding:8px 36px 8px 14px;outline:none;transition:border-color .2s}
+  .header-search input{-webkit-appearance:none;appearance:none;width:100%;background:var(--bg);border:1px solid var(--border);border-radius:4px;color:var(--cream);font-family:'Inter',sans-serif;font-size:13px;padding:8px 36px 8px 14px;outline:none;transition:border-color .2s}
+  .header-search input::-webkit-search-decoration,.header-search input::-webkit-search-cancel-button,.header-search input::-webkit-search-results-button,.header-search input::-webkit-search-results-decoration{display:none}
   .header-search input::placeholder{color:var(--cream-dim)}
   .header-search input:focus{border-color:var(--gold-dim)}
   .header-search .search-icon{position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--cream-dim);font-size:14px;pointer-events:none}
   .header-actions{display:flex;align-items:center;gap:8px;flex-shrink:0}
-  .want-list-btn{background:var(--surface2);color:var(--want);border:1px solid #2a4a6a;border-radius:4px;font-family:'Inter',sans-serif;font-size:12px;font-weight:600;padding:8px 13px;cursor:pointer;white-space:nowrap;letter-spacing:.04em;transition:background .2s,border-color .2s;display:flex;align-items:center;gap:6px}
+  .want-list-btn{background:rgba(74,143,212,.12);color:var(--want);border:1px solid var(--want);border-radius:4px;font-family:'Inter',sans-serif;font-size:12px;font-weight:600;padding:8px 13px;cursor:pointer;white-space:nowrap;letter-spacing:.04em;transition:background .2s,border-color .2s;display:flex;align-items:center;gap:6px}
   .want-list-btn:hover{background:var(--want);color:#fff;border-color:var(--want)}
   .stats-btn{background:var(--surface2);color:#a78bca;border:1px solid #4a3a6a;border-radius:4px;font-family:'Inter',sans-serif;font-size:12px;font-weight:600;padding:8px 13px;cursor:pointer;white-space:nowrap;letter-spacing:.04em;transition:background .2s,border-color .2s;display:flex;align-items:center;gap:6px}
   .stats-btn:hover{background:#a78bca;color:#fff;border-color:#a78bca}
-  .add-album-btn{background:var(--surface2);color:var(--gold);border:1px solid var(--gold-dim);border-radius:4px;font-family:'Inter',sans-serif;font-size:12px;font-weight:600;padding:8px 13px;cursor:pointer;white-space:nowrap;transition:background .2s,border-color .2s;display:flex;align-items:center;gap:6px}
-  .add-album-btn:hover{background:var(--gold);color:var(--bg);border-color:var(--gold)}
+  .add-album-btn{background:var(--gold);color:var(--bg);border:1px solid var(--gold);border-radius:4px;font-family:'Inter',sans-serif;font-size:12px;font-weight:700;padding:8px 13px;cursor:pointer;white-space:nowrap;transition:background .2s,border-color .2s;display:flex;align-items:center;gap:6px}
+  .add-album-btn:hover{background:#DFB95C;border-color:#DFB95C}
   .spin-btn{background:var(--gold);color:var(--bg);border:none;border-radius:4px;font-family:'Playfair Display',serif;font-size:13px;font-weight:700;padding:8px 14px;cursor:pointer;white-space:nowrap;transition:background .2s,transform .1s}
   .spin-btn:hover{background:#DFB95C;transform:translateY(-1px)}
 
@@ -226,7 +227,20 @@
   .loading-dots::after{content:'';animation:dots 1.2s steps(3,end) infinite}
   @keyframes dots{0%{content:'.'}33%{content:'..'}66%{content:'...'}}
 
-  /* WANTLIST MODAL */
+  /* AUTOCOMPLETE DROPDOWN */
+  .autocomplete-wrap{position:relative;flex:1}
+  .autocomplete-dropdown{position:absolute;top:100%;left:0;right:0;background:var(--surface2);border:1px solid var(--gold-dim);border-top:none;border-radius:0 0 4px 4px;z-index:50;max-height:260px;overflow-y:auto;display:none;box-shadow:0 8px 24px rgba(0,0,0,.7)}
+  .autocomplete-dropdown.open{display:block}
+  .ac-row{display:flex;align-items:center;gap:10px;padding:8px 12px;cursor:pointer;transition:background .12s;border-bottom:1px solid var(--border)}
+  .ac-row:last-child{border-bottom:none}
+  .ac-row:hover,.ac-row.focused{background:rgba(201,168,76,.08)}
+  .ac-thumb{width:38px;height:38px;border-radius:2px;object-fit:cover;background:var(--groove);flex-shrink:0}
+  .ac-info{flex:1;min-width:0}
+  .ac-title{font-family:'Playfair Display',serif;font-size:13px;font-weight:700;color:var(--cream);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .ac-meta{font-size:11px;color:var(--cream-dim)}
+  .ac-action{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--gold);flex-shrink:0}
+  .ac-spinner{padding:14px;text-align:center;font-size:12px;color:var(--cream-dim)}
+  .autocomplete-wrap .add-search-input,.autocomplete-wrap .wantlist-input{width:100%}
   .wantlist-modal{background:var(--surface);border:1px solid var(--border);border-radius:6px;max-width:600px;width:100%;max-height:90vh;overflow-y:auto;position:relative;animation:modalIn .3s cubic-bezier(.16,1,.3,1) both}
   .wantlist-header{padding:22px 24px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
   .wantlist-header h2{font-family:'Playfair Display',serif;font-size:20px;font-weight:900;color:var(--cream)}
@@ -303,19 +317,37 @@
   @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 
   /* RESPONSIVE */
-  @media(max-width:640px){
-    .site-header{gap:8px;padding:0 12px}
+  @media(max-width:700px){
+    /* Header: single compact row with icon-only buttons */
+    .site-header{gap:6px;padding:0 12px;height:52px}
+    .logo{font-size:15px;letter-spacing:.02em}
     .logo span{display:none}
-    .spin-btn{padding:8px 10px;font-size:11px}
-    .add-album-btn span:last-child,.want-list-btn span:last-child{display:none}
-    .add-album-btn,.want-list-btn{padding:8px 10px}
-    .filter-bar{padding:10px 12px}
-    .grid{padding:12px 12px 48px;gap:12px;grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
+    .header-search{max-width:140px}
+    .header-search input{font-size:12px;padding:7px 30px 7px 10px}
+    .header-actions{gap:4px}
+    /* Show only emoji icon, hide text label */
+    .want-list-btn span:last-child,.stats-btn span:last-child,.add-album-btn span:last-child{display:none}
+    .want-list-btn,.stats-btn{padding:7px 9px;font-size:14px}
+    .add-album-btn{padding:7px 9px;font-size:16px}
+    .spin-btn{padding:7px 9px;font-size:12px}
+    /* Filter bar: single row */
+    .filter-bar{padding:7px 12px;gap:6px;flex-wrap:nowrap;overflow-x:auto}
+    .filter-select{font-size:11px;padding:5px 20px 5px 8px}
+    .sort-group{margin-left:auto;flex-shrink:0}
+    .sort-btn{font-size:10px;padding:5px 10px}
+    /* 3-column grid */
+    .grid{padding:8px 8px 48px;gap:7px;grid-template-columns:repeat(3,1fr)}
+    .card-body{padding:6px 7px 8px}
+    .card-artist{font-size:8px;margin-bottom:1px}
+    .card-title{font-size:11px;margin-bottom:3px}
+    .card-meta{font-size:9px;gap:4px}
+    .card-genre-tag{font-size:7px;padding:1px 4px}
+    /* Detail modal */
     .detail-modal-header{grid-template-columns:1fr}
     .detail-art-wrap{border-radius:6px 6px 0 0;aspect-ratio:16/9;max-height:200px}
     .form-row{grid-template-columns:1fr}
   }
-  @media(max-width:400px){.grid{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:400px){.grid{grid-template-columns:repeat(3,1fr)}}
   button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
   @media(prefers-reduced-motion:reduce){.card,.vinyl-spinning,.vinyl-slowing{animation:none;transition:none}}
 </style>
@@ -330,9 +362,9 @@
     <span class="search-icon">⌕</span>
   </div>
   <div class="header-actions">
-    <button class="want-list-btn" id="wantListBtn"><span>📋</span><span>Want List</span></button>
     <button class="stats-btn" id="statsBtn"><span>📊</span><span>Stash Facts</span></button>
-    <button class="add-album-btn" id="addAlbumBtn"><span style="font-size:16px;line-height:1">＋</span><span>Add Album</span></button>
+    <button class="want-list-btn" id="wantListBtn"><span>🎯</span><span>Wish List</span></button>
+    <button class="add-album-btn" id="addAlbumBtn"><span style="font-size:16px;line-height:1">＋</span><span>Add to Crate</span></button>
     <button class="spin-btn" id="spinBtn">🎲 Spin</button>
   </div>
 </header>
@@ -382,10 +414,23 @@
       <div class="detail-info">
         <div>
           <div class="detail-actions-row">
-            <div class="detail-genre-pill" id="modalGenre"></div>
+            <div class="detail-genre-pill" id="modalGenre" onclick="openGenreEditor()" style="cursor:pointer;user-select:none" title="Click to change genre">✎ <span id="modalGenreText"></span></div>
             <button class="detail-heart-btn" id="detailHeartBtn" onclick="toggleFavoriteFromModal()">
               <span id="detailHeartIcon">♡</span><span id="detailHeartLabel">Favorite</span>
             </button>
+          </div>
+          <div id="genreEditorWrap" style="display:none;margin-bottom:8px">
+            <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+              <select id="genreEditorSelect" style="background:var(--bg);border:1px solid var(--gold-dim);border-radius:3px;color:var(--cream);font-family:'Inter',sans-serif;font-size:12px;padding:5px 10px;outline:none;flex:1;min-width:140px"></select>
+              <button onclick="saveGenreEdit()" style="background:var(--gold);border:none;border-radius:3px;color:var(--bg);font-family:'Inter',sans-serif;font-size:11px;font-weight:700;padding:5px 12px;cursor:pointer">Save</button>
+              <button onclick="closeGenreEditor()" style="background:none;border:1px solid var(--border);border-radius:3px;color:var(--cream-dim);font-family:'Inter',sans-serif;font-size:11px;padding:5px 10px;cursor:pointer">✕</button>
+            </div>
+            <div id="customGenreWrap" style="display:none;margin-top:6px">
+              <div style="display:flex;gap:6px;align-items:center">
+                <input id="customGenreInput" placeholder="New genre name…" style="flex:1;background:var(--bg);border:1px solid var(--gold-dim);border-radius:3px;color:var(--cream);font-family:'Inter',sans-serif;font-size:12px;padding:5px 10px;outline:none">
+                <button onclick="applyCustomGenre()" style="background:var(--gold);border:none;border-radius:3px;color:var(--bg);font-family:'Inter',sans-serif;font-size:11px;font-weight:700;padding:5px 12px;cursor:pointer">Apply</button>
+              </div>
+            </div>
           </div>
           <div class="detail-title" id="modalTitle"></div>
           <div class="detail-artist" id="modalArtist"></div>
@@ -466,7 +511,10 @@
     </div>
     <div class="add-search-area">
       <div class="add-search-row">
-        <input class="add-search-input" id="addSearchInput" placeholder="Search by artist or album name…" autocomplete="off">
+        <div class="autocomplete-wrap" id="addAutoWrap">
+          <input class="add-search-input" id="addSearchInput" placeholder="Type artist or album — results appear as you type…" autocomplete="off">
+          <div class="autocomplete-dropdown" id="addAutoDropdown"></div>
+        </div>
         <button class="add-search-btn" id="addSearchBtn" onclick="searchAlbums()">Search</button>
       </div>
       <div class="search-results-list" id="searchResultsList"></div>
@@ -486,6 +534,7 @@
             <option>Pop</option><option>R&B / Soul</option><option>Hip-Hop</option><option>Country</option>
             <option>Singer-Songwriter</option><option>Soundtrack</option><option>Classical</option>
             <option>Holiday</option><option>Compilation</option>
+            <option value="__custom__">✚ Create your own…</option>
           </select>
         </div>
       </div>
@@ -509,12 +558,15 @@
   <div class="wantlist-modal">
     <button class="modal-close" id="wantlistClose">×</button>
     <div class="wantlist-header">
-      <h2>📋 Want List</h2>
+      <h2>🎯 Wish List</h2>
       <span class="wantlist-count" id="wantlistCount">0 records</span>
     </div>
     <div class="wantlist-add-row">
-      <input class="wantlist-input" id="wantArtistInput" placeholder="Artist name…">
-      <input class="wantlist-input" id="wantTitleInput" placeholder="Album title…">
+      <input class="wantlist-input" id="wantArtistInput" placeholder="Artist name…" autocomplete="off">
+      <div class="autocomplete-wrap" id="wantAutoWrap" style="flex:1">
+        <input class="wantlist-input" id="wantTitleInput" placeholder="Album title — starts searching as you type…" autocomplete="off" style="width:100%">
+        <div class="autocomplete-dropdown" id="wantAutoDropdown"></div>
+      </div>
       <input class="wantlist-input" id="wantYearInput" placeholder="Year" style="max-width:72px;">
       <button class="wantlist-add-btn" onclick="addWantItem()">＋ Add</button>
     </div>
@@ -556,27 +608,99 @@ const GENRE_IMAGES = {
 };
 function getPlaceholder(genre){return GENRE_IMAGES[genre]||GENRE_IMAGES["default"]}
 
+// ── DISCOGS COVER OVERRIDES ──
+// Hand-curated covers for albums iTunes can't match correctly.
+// Key format: "artist|title" (lowercase). Add more as needed.
+const DISCOGS_COVERS = {
+  "jimi hendrix|high, live 'n' dirty": "https://i.discogs.com/PAkQRY4lUTwv0MUdWbJPlWNnUBIzoEuJMvQqTjAUz20/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTIzNTI4/OTMtMTI3OTgzNjc5/My5qcGVn.jpeg",
+  "chicago|chicago": "https://i.discogs.com/8QwLQmNysF7JaxHxv0ii-at-R2kKTkQmLpRk9_IIYHQ/rs:fit/g:sm/q:90/h:600/w:587/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTQ0ODc1/OS0xNjQwNjEwODQ3/LTUzMjEuanBlZw.jpeg",
+  "chicago|chicago greatest hits 9": "https://i.discogs.com/mw2pGhqCFqVGxubH-8O6w7FKKMjkrtRlG8fbNP0P0TY/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTcwOTQ4/NC0xMzY1Mzc0NjU3/LTQzMzAuanBlZw.jpeg",
+  "cruisin|5 lp set": "https://i.discogs.com/3_5zxpzdvIa7D89hhiosXMXWrx2McvNwWlnhaETQnVc/rs:fit/g:sm/q:90/h:600/w:595/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTU0MjY3/ODYtMTM5MzA4NTQ5/Ny01OTE3LmpwZWc.jpeg",
+  "eddie and the cruisers|soundtrack": "https://i.discogs.com/sdx8LeyYqeRcU5qd0-oVwvflm8DasQBqlw2z0tpvBks/rs:fit/g:sm/q:90/h:585/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTk2OTkx/Ny0xNTg4NDA5ODky/LTUyMTcuanBlZw.jpeg",
+  "eddie and the cruisers|soundtrack (alt press)": "https://i.discogs.com/sdx8LeyYqeRcU5qd0-oVwvflm8DasQBqlw2z0tpvBks/rs:fit/g:sm/q:90/h:585/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTk2OTkx/Ny0xNTg4NDA5ODky/LTUyMTcuanBlZw.jpeg",
+  "electric light orchestra|greatest hits": "https://i.discogs.com/gvAMs4vqQFMkDKDAz6IIQu6QQgDBcZTdTH9oXTZ6A14/rs:fit/g:sm/q:90/h:569/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTM4Nzg0/Mi0xMjkxODU0MDg1/LmpwZWc.jpeg",
+  "elvis presley|double dynamite": "https://i.discogs.com/mNfnucIOIUs9vyJ2Xa-4cPwhsa1YgBMD803nAW07AMI/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE0MDIy/MDItMTMxMjA3NzM3/OC5qcGVn.jpeg",
+  "elvis presley|elvis the legend lives on": "https://i.discogs.com/ov9P15owNXw4ErYGZ_j1xUwqrliOmL5bM828Gy4IPA0/rs:fit/g:sm/q:90/h:300/w:311/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTM2MjA3/NTQtMTMzNzY4NzY5/OS00MjI5LmpwZWc.jpeg",
+  "elvis presley|gold records volume 5": "https://i.discogs.com/iou6qS5szeY_JF24gHtIWxk7QmPgzqzEWBWWfpOFPpY/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTUxOTY1/NjEtMTQ4NzM2MjQ5/My03MTI3LmpwZWc.jpeg",
+  "foreigner|foreigner": "https://i.discogs.com/oEj74iYxR3jtmswQkEnVrBhRYufUjxjVncNvffQgDkM/rs:fit/g:sm/q:90/h:595/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTc2NDk2/Ni0xNTYzNzM2ODQ2/LTU0MzQuanBlZw.jpeg",
+  "green day|american idiot": "https://i.discogs.com/MZK1NpQQ4V2QYjchCOmpc6aZuYJVjfAWfw9c5cAp6zI/rs:fit/g:sm/q:90/h:596/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTEyMDM0/NzAtMTU3NDI2ODI2/Ni05MDM2LmpwZWc.jpeg",
+  "mose jones|blackbird": "https://i.discogs.com/oYCqUWSfg3-hof6zXo2X3EHAlx952rxCiXXmtu0erDI/rs:fit/g:sm/q:90/h:600/w:595/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTY4MTUy/NjQtMTQyNzIwNjMx/OC0zNjA5LmpwZWc.jpeg",
+  "pearl jam|ten": "https://i.discogs.com/rttPGqFmPw8eqZNCMNE6IpHNcCV22Z-p0DQ5hAL50RI/rs:fit/g:sm/q:90/h:600/w:596/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTExMTE2/NDUxLTE1MTE1Mzk0/MTYtMzkyMi5qcGVn.jpeg",
+  "peter frampton & the bee gees|sgt. pepper's lonely hearts club band": "https://i.discogs.com/ZxClWXCi4c2U1VERxcDf1BZKoW8-1qt-I1PY0iEHbMk/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTExNDAx/MzMzLTE3NzY1MjAy/NzktMjM1MS5qcGVn.jpeg",
+  "pink floyd|animals": "https://i.discogs.com/_hYJ-UiHBq0KtuIlz26o-4Ar82o9589HIFIE5XOXuVU/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTM5MTMy/Mi0xNjkxNTYzMjc4/LTYwODAuanBlZw.jpeg",
+  "pink floyd|the dark side of the moon": "https://i.discogs.com/1fwskTLM6cfxbdNmBDJ8expl6wab0tEgxvuloLIqKh8/rs:fit/g:sm/q:90/h:596/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTkyODc4/MDktMTQ3OTc1MzIz/Ni05NjE3LmpwZWc.jpeg",
+  "the babys|union jacks": "https://i.discogs.com/59xvhuAuOA8gjeG3cW08gu92XPDdoevrzizhxIHtZ9U/rs:fit/g:sm/q:90/h:597/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTc1MzU4/OC0xNTM4MTMyOTQ1/LTYzMTguanBlZw.jpeg",
+  "the cars|the cars": "https://i.discogs.com/mQ4p8rs4QCkWGIUV36RxMK41r3w-paGDsHmPYFZwydA/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE5MDIx/OS0xMzE5MDU0ODYz/LmpwZWc.jpeg",
+  "the doors|13": "https://i.discogs.com/AsXJXr7HA_M2xcmLFkY4WsxuM-pPr67tPllRXeWQC28/rs:fit/g:sm/q:90/h:590/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI5MTcx/MzMtMTM2MTMwMDQ1/NS05MjU1LmpwZWc.jpeg",
+};
+
 // ── PERSISTENCE ──
 function lsGet(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch{return d}}
 function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch{}}
 
 // ── COVER ART (iTunes) ──
-const CAA_KEY="crate_coverart_cache_v3";
+const CAA_KEY="crate_coverart_cache_v4";
 let caaCache=lsGet(CAA_KEY,{});
 Object.keys(caaCache).forEach(k=>{if(!caaCache[k])delete caaCache[k]});
 function saveCaaCache(){lsSet(CAA_KEY,caaCache)}
 
+// ── COVER SEARCH OVERRIDES ──
+// Some albums need a hand-tuned iTunes search term to find the right cover
+// (self-titled records, compilations, or names iTunes catalogs differently).
+const COVER_QUERY_OVERRIDES = {
+  // Obscure Southern-rock debut — search by full band name + title
+  "mose jones|blackbird":"Mose Jones Blackbird",
+  // UK hits comp — iTunes indexes under "Electric Light Orchestra", accented title varies
+  "electric light orchestra|olé elo":"Electric Light Orchestra Ole ELO",
+  // 1975 Pickwick budget double-LP — keep exact title for best chance
+  "elvis presley|double dynamite":"Elvis Presley Double Dynamite",
+  // Multi-LP budget comp — drop the redundant "Elvis" prefix from the search
+  "elvis presley|elvis the legend lives on":"Elvis Presley Legend Lives On",
+  // Self-titled debut — year disambiguates from later releases
+  "foreigner|foreigner":"Foreigner 1977",
+  // Correct album title is "Shinin' On" (1974) — key updated to match fixed collection entry
+  "grand funk railroad|shinin' on":"Grand Funk Railroad Shinin On 1974",
+  // Widely catalogued — plain query is reliable
+  "green day|american idiot":"Green Day American Idiot",
+  // 1978 Nutmeg budget live LP — approximated for iTunes search
+  "jimi hendrix|high, live 'n' dirty":"Jimi Hendrix High Live Dirty",
+  // 1969 Reprise compilation — straightforward match
+  "jimi hendrix|smash hits":"Jimi Hendrix Smash Hits",
+  // iTunes catalogs this under "John Mellencamp" not "John Cougar Mellencamp"
+  "john cougar mellencamp|uh-huh":"John Mellencamp Uh Huh 1983",
+  "lynyrd skynyrd|give me back my bullets":"Lynyrd Skynyrd Give Me Back My Bullets",
+  "pearl jam|ten":"Pearl Jam Ten",
+  "pink floyd|animals":"Pink Floyd Animals",
+  "pink floyd|the dark side of the moon":"Pink Floyd Dark Side of the Moon",
+  // Drop "The" from artist to catch both "Babys" and "The Babys" iTunes entries
+  "the babys|union jacks":"Babys Union Jacks",
+  // Year disambiguates the debut from later self-titled re-issues
+  "the cars|the cars":"The Cars 1978",
+  // Short title — keep artist anchored in the query
+  "the doors|13":"The Doors 13 1970"
+};
+
 function buildSearchStrategies(artist,title){
-  const ca=artist.replace(/various artists/ig,"").trim();
-  const ct=title.replace(/\([^)]*\)/g,"").replace(/soundtrack/ig,"").replace(/greatest hits \d+/ig,"greatest hits").replace(/self[- ]titled/ig,"").trim();
+  const overrideKey=(artist+"|"+title).toLowerCase().trim();
+  if(COVER_QUERY_OVERRIDES[overrideKey])return[encodeURIComponent(COVER_QUERY_OVERRIDES[overrideKey])];
+  const clean=s=>s.replace(/\([^)]*\)/g,"").replace(/\[[^\]]*\]/g,"").replace(/soundtrack/ig,"").replace(/greatest hits.*$/ig,"greatest hits").replace(/self[- ]titled/ig,"").replace(/vol\.?\s*\d+/ig,"").replace(/[^\w\s&]/g," ").replace(/\s+/g," ").trim();
+  const ca=clean(artist.replace(/various artists/ig,"").replace(/^the\s+/i,"").trim());
+  const ct=clean(title);
   const norm=s=>s.toLowerCase().replace(/^the\s+/i,"").trim();
-  const isSelf=norm(ct)===norm(ca)||!ct;
-  const ant=ca.replace(/^the\s+/i,"").trim();
-  const hasThe=ant!==ca;
+  const isSelf=norm(ct)===norm(ca.replace(/^the\s+/i,""))||!ct;
   const s=[];
-  if(isSelf){if(ca)s.push(encodeURIComponent(ca));if(hasThe)s.push(encodeURIComponent(ant));}
-  else{if(ca&&ct)s.push(encodeURIComponent(`${ca} ${ct}`));if(hasThe&&ct)s.push(encodeURIComponent(`${ant} ${ct}`));if(ct)s.push(encodeURIComponent(ct));if(ca)s.push(encodeURIComponent(ca));}
-  return [...new Set(s)];
+  // Best strategy: "Artist Album" exact
+  if(ca&&ct&&!isSelf)s.push(encodeURIComponent(`${ca} ${ct}`));
+  // Artist only for self-titled
+  if(isSelf&&ca)s.push(encodeURIComponent(ca));
+  // Album only (works well for unique album names)
+  if(ct&&ct.length>4)s.push(encodeURIComponent(ct));
+  // Original artist name with title
+  const origArtist=artist.replace(/various artists/ig,"").trim();
+  if(origArtist!==ca&&ct)s.push(encodeURIComponent(`${origArtist} ${ct}`));
+  // Fallback: just artist
+  if(ca)s.push(encodeURIComponent(ca));
+  return[...new Set(s)];
 }
 
 const coverQueue=[];let queueRunning=false;
@@ -596,16 +720,61 @@ async function drainCoverQueue(){
   if(failedLookups.size>0&&retryCount<3)scheduleAutoRetry();
 }
 
-async function fetchAndApplyCover({img,artist,title}){
+// ── COVER NORMALISER ──
+// Strips diacritics (é→e, ü→u, etc.) BEFORE removing non-alphanumeric, so accented
+// titles like "Olé ELO" and plain "Ole ELO" both collapse to the same token.
+function normCover(s){
+  return s.toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .replace(/[^a-z0-9]/g,'');
+}
+
+// ── ARTIST ALIASES FOR COVER MATCHING ──
+// Maps a normalised artist key to extra normalised names iTunes might use instead.
+// E.g. "John Cougar Mellencamp" was re-catalogued by iTunes as "John Mellencamp".
+const COVER_ARTIST_ALIASES={
+  "johncougarmellencamp":["johnmellencamp","johncougar"],
+};
+
+async function fetchAndApplyCover({img,artist,title,year}){
   const ck=(artist+"|"+title).toLowerCase();
   for(const q of buildSearchStrategies(artist,title)){
     try{
-      const r=await fetch(`https://itunes.apple.com/search?term=${q}&entity=album&limit=3`);
-      if(r.ok){const d=await r.json();if(d.results&&d.results.length){const url=d.results[0].artworkUrl100.replace("100x100bb","400x400bb");caaCache[ck]=url;saveCaaCache();if(document.contains(img))img.src=url;failedLookups.delete(ck);return;}}
+      const r=await fetch(`https://itunes.apple.com/search?term=${q}&entity=album&limit=15`);
+      if(r.ok){
+        const d=await r.json();
+        if(d.results&&d.results.length){
+          const normT=normCover(title);
+          const normA=normCover(artist);
+          // Build a list of artist tokens to accept (primary + any known aliases)
+          const artistVariants=[normA,...(COVER_ARTIST_ALIASES[normA]||[])];
+          let bestFull=null,bestArtistOnly=null;
+          for(const res of d.results){
+            const rT=normCover(res.collectionName||"");
+            const rA=normCover(res.artistName||"");
+            const rYear=res.releaseDate?parseInt(res.releaseDate):0;
+            // Artist match: any known alias must overlap with the iTunes artist token
+            const artistMatch=artistVariants.some(a=>
+              rA===a||(a.length>2&&(rA.includes(a)||a.includes(rA))));
+            const titleMatch=rT===normT||(normT.length>2&&(rT.includes(normT)||normT.includes(rT)));
+            const yearMatch=year&&Math.abs(rYear-year)<=2;
+            if(!artistMatch)continue;
+            if(titleMatch&&!bestFull){bestFull=res;if(!year||yearMatch)break}
+            if(!bestArtistOnly)bestArtistOnly=res;
+          }
+          // Only accept a result where the artist genuinely matches — never fall back
+          // to an arbitrary first result, since that produces a confidently-wrong cover.
+          const best=bestFull||bestArtistOnly;
+          if(best){
+            const url=(best.artworkUrl100||best.artworkUrl60||"").replace("100x100bb","600x600bb");
+            if(url){if(!DISCOGS_COVERS[ck]){caaCache[ck]=url;saveCaaCache();}if(document.contains(img))img.src=url;failedLookups.delete(ck);return;}
+          }
+        }
+      }
     }catch{}
     await sleep(180);
   }
-  failedLookups.set(ck,{img,artist,title});
+  failedLookups.set(ck,{img,artist,title,year});
 }
 
 function scheduleAutoRetry(){
@@ -617,7 +786,7 @@ function refreshAllCovers(){
   retryCount=0;clearTimeout(retryTimer);
   document.querySelectorAll(".card-art img[data-artist]").forEach(img=>{
     const ck=(img.dataset.artist+"|"+img.dataset.title).toLowerCase();
-    if(!caaCache[ck])coverQueue.push({img,artist:img.dataset.artist,title:img.dataset.title});
+    if(!caaCache[ck])coverQueue.push({img,artist:img.dataset.artist,title:img.dataset.title,year:+img.dataset.year||0});
     else img.src=caaCache[ck];
   });
   failedLookups.clear();if(coverQueue.length>0)drainCoverQueue();
@@ -644,7 +813,7 @@ const coverObserver=new IntersectionObserver(entries=>{
     const img=entry.target;coverObserver.unobserve(img);
     const ck=(img.dataset.artist+"|"+img.dataset.title).toLowerCase();
     if(caaCache[ck])img.src=caaCache[ck];
-    else{coverQueue.push({img,artist:img.dataset.artist,title:img.dataset.title});drainCoverQueue();}
+    else{coverQueue.push({img,artist:img.dataset.artist,title:img.dataset.title,year:+img.dataset.year||0});drainCoverQueue();}
   });
 },{rootMargin:"300px"});
 
@@ -707,6 +876,60 @@ const KNOWN_TRACKLISTS = {
   "toto|toto iv (africa)":{sides:[{label:"Side A",tracks:[{name:"Rosanna",dur:"5:11"},{name:"Make Believe",dur:"3:59"},{name:"I'll Be Over You",dur:"3:38"},{name:"Waiting for Your Love",dur:"3:54"}]},{label:"Side B",tracks:[{name:"Good for You",dur:"4:08"},{name:"It's a Feeling",dur:"4:22"},{name:"Afraid of Love",dur:"4:46"},{name:"Lovers in the Night",dur:"4:18"},{name:"We Made It",dur:"4:21"},{name:"Africa",dur:"4:55"}]}]},
   "robert plant|pictures at eleven":{sides:[{label:"Side A",tracks:[{name:"Burning Down One Side",dur:"4:44"},{name:"Moonlight in Samosa",dur:"5:01"},{name:"Pledge Pin",dur:"4:22"},{name:"Slow Dancer",dur:"5:40"}]},{label:"Side B",tracks:[{name:"Worse Than Detroit",dur:"4:05"},{name:"Fat Lip",dur:"4:56"},{name:"Like I've Never Been Gone",dur:"4:24"},{name:"Mystery Title",dur:"5:13"}]}]},
   "robert plant|the principle of moments":{sides:[{label:"Side A",tracks:[{name:"Other Arms",dur:"4:14"},{name:"In the Mood",dur:"5:05"},{name:"Messin' with the Mekon",dur:"4:52"},{name:"Wreckless Love",dur:"4:05"}]},{label:"Side B",tracks:[{name:"Too Loud",dur:"4:48"},{name:"Catfish Rising (Further Up the Creek)",dur:"4:51"},{name:"In the Forest",dur:"4:21"},{name:"Big Log",dur:"5:07"}]}]},
+  "the carpenters|the carpenters":{sides:[{label:"Side A",tracks:[{name:"Rainy Days and Mondays",dur:"3:38"},{name:"Saturday",dur:"3:03"},{name:"Let Me Be the One",dur:"3:02"},{name:"(A Place to) Hideaway",dur:"3:11"},{name:"For All We Know",dur:"2:55"}]},{label:"Side B",tracks:[{name:"Superstar",dur:"3:44"},{name:"Druscilla Penny",dur:"3:39"},{name:"One Love",dur:"3:13"},{name:"Bacharach/David Medley",dur:"4:51"},{name:"Sometimes",dur:"3:23"}]}]},
+  "chicago|chicago":{sides:[{label:"Side A",tracks:[{name:"Introduction",dur:"7:44"},{name:"Does Anybody Really Know What Time It Is?",dur:"5:37"},{name:"Beginnings",dur:"7:54"}]},{label:"Side B",tracks:[{name:"Questions 67 and 68",dur:"5:00"},{name:"Listen",dur:"5:35"},{name:"Poem 58",dur:"7:44"}]},{label:"Side C",tracks:[{name:"Free Form Guitar",dur:"6:52"},{name:"South California Purples",dur:"4:50"},{name:"I'm a Man",dur:"7:31"}]},{label:"Side D",tracks:[{name:"Prologue, August 29, 1968",dur:"2:37"},{name:"Someday (August 29, 1968)",dur:"7:58"},{name:"Liberation",dur:"15:04"}]}]},
+  "chicago|chicago greatest hits 9":{sides:[{label:"Side A",tracks:[{name:"25 or 6 to 4",dur:"4:50"},{name:"Does Anybody Really Know What Time It Is?",dur:"3:14"},{name:"Colour My World",dur:"3:09"},{name:"Just You 'n' Me",dur:"3:36"},{name:"Feelin' Stronger Every Day",dur:"4:05"}]},{label:"Side B",tracks:[{name:"Saturday in the Park",dur:"3:53"},{name:"Wishing You Were Here",dur:"3:16"},{name:"Call on Me",dur:"3:51"},{name:"(I've Been) Searchin' So Long",dur:"4:51"},{name:"Old Days",dur:"3:14"}]}]},
+  "conway twitty & loretta lynn|we only make believe":{sides:[{label:"Side A",tracks:[{name:"After the Fire Is Gone",dur:"2:39"},{name:"Lead Me On",dur:"2:44"},{name:"You're the Reason Our Kids Are Ugly",dur:"2:48"},{name:"We Only Make Believe",dur:"2:48"}]},{label:"Side B",tracks:[{name:"Louisiana Woman, Mississippi Man",dur:"2:47"},{name:"Feelins'",dur:"2:31"},{name:"Country Bumpkin",dur:"3:01"},{name:"As Soon as I Hang Up the Phone",dur:"2:52"}]}]},
+  "david bowie|changesonebowie":{sides:[{label:"Side A",tracks:[{name:"Space Oddity",dur:"5:14"},{name:"John, I'm Only Dancing",dur:"2:44"},{name:"Changes",dur:"3:33"},{name:"Ziggy Stardust",dur:"3:14"},{name:"Suffragette City",dur:"3:24"},{name:"Jean Genie",dur:"4:07"}]},{label:"Side B",tracks:[{name:"Diamond Dogs",dur:"5:57"},{name:"Rebel Rebel",dur:"5:09"},{name:"Young Americans",dur:"5:10"},{name:"Fame",dur:"4:12"},{name:"Golden Years",dur:"4:01"}]}]},
+  "david gilmour|about face":{sides:[{label:"Side A",tracks:[{name:"Until We Sleep",dur:"5:03"},{name:"Murder",dur:"4:37"},{name:"Love on the Air",dur:"3:55"},{name:"Blue Light",dur:"4:00"},{name:"Out of the Blue",dur:"3:42"}]},{label:"Side B",tracks:[{name:"All Lovers Are Deranged",dur:"4:18"},{name:"You Know I'm Right",dur:"4:00"},{name:"Cruise",dur:"4:30"},{name:"Let's Get Metaphysical",dur:"5:05"},{name:"Near the End",dur:"5:38"}]}]},
+  "the doors|13":{sides:[{label:"Side A",tracks:[{name:"Light My Fire",dur:"7:06"},{name:"People Are Strange",dur:"2:12"},{name:"Back Door Man",dur:"3:33"},{name:"Moonlight Drive",dur:"3:03"},{name:"The Crystal Ship",dur:"2:31"},{name:"Roadhouse Blues",dur:"4:03"}]},{label:"Side B",tracks:[{name:"Touch Me",dur:"3:13"},{name:"Love Her Madly",dur:"3:18"},{name:"Love Me Two Times",dur:"3:19"},{name:"Hello, I Love You",dur:"2:12"},{name:"Soul Kitchen",dur:"3:30"},{name:"The End",dur:"11:41"}]}]},
+  "eddie and the cruisers|soundtrack":{sides:[{label:"Side A",tracks:[{name:"On the Dark Side",dur:"3:53"},{name:"Tender Years",dur:"4:22"},{name:"Runaround Sue",dur:"3:41"},{name:"Season in Hell",dur:"4:00"}]},{label:"Side B",tracks:[{name:"Down on My Knees",dur:"3:31"},{name:"Wild Summer Nights",dur:"4:12"},{name:"Boardwalk Angel",dur:"3:40"},{name:"Betty Lou's Got a New Pair of Shoes",dur:"2:44"}]}]},
+  "eddie and the cruisers|soundtrack (alt press)":{sides:[{label:"Side A",tracks:[{name:"On the Dark Side",dur:"3:53"},{name:"Tender Years",dur:"4:22"},{name:"Runaround Sue",dur:"3:41"},{name:"Season in Hell",dur:"4:00"}]},{label:"Side B",tracks:[{name:"Down on My Knees",dur:"3:31"},{name:"Wild Summer Nights",dur:"4:12"},{name:"Boardwalk Angel",dur:"3:40"},{name:"Betty Lou's Got a New Pair of Shoes",dur:"2:44"}]}]},
+  "electric light orchestra|greatest hits":{sides:[{label:"Side A",tracks:[{name:"Evil Woman",dur:"4:25"},{name:"Livin' Thing",dur:"3:32"},{name:"Can't Get It Out of My Head",dur:"4:27"},{name:"Showdown",dur:"4:22"},{name:"Strange Magic",dur:"4:37"}]},{label:"Side B",tracks:[{name:"Telephone Line",dur:"4:38"},{name:"Do Ya",dur:"3:42"},{name:"Rockaria!",dur:"3:39"},{name:"Wild West Hero",dur:"4:06"},{name:"Mr. Blue Sky",dur:"5:05"}]}]},
+  "electric light orchestra|olelo":{sides:[{label:"Side A",tracks:[{name:"Prologue",dur:"1:35"},{name:"Twilight",dur:"4:16"},{name:"Yours Truly, 2095",dur:"4:39"},{name:"Ticket to the Moon",dur:"4:23"},{name:"The Way Life's Meant to Be",dur:"2:48"}]},{label:"Side B",tracks:[{name:"Another Heart Breaks",dur:"4:02"},{name:"Rain Is Falling",dur:"3:39"},{name:"From the End of the World",dur:"3:09"},{name:"The Lights Go Down",dur:"4:33"},{name:"Here Is the News",dur:"3:54"},{name:"21st Century Man",dur:"4:08"},{name:"Hold On Tight",dur:"3:41"},{name:"Epilogue",dur:"0:41"}]}]},
+  "elvis presley|double dynamite":{sides:[{label:"Side A",tracks:[{name:"Burning Love",dur:"2:54"},{name:"I'll Be There",dur:"2:35"},{name:"Fools Fall in Love",dur:"2:40"},{name:"Follow That Dream",dur:"2:11"},{name:"You'll Never Walk Alone",dur:"2:10"}]},{label:"Side B",tracks:[{name:"Flaming Star",dur:"2:16"},{name:"It's Now or Never",dur:"3:13"},{name:"O Come All Ye Faithful",dur:"2:03"},{name:"She Thinks I Still Care",dur:"2:24"},{name:"I'll Take You Home Again Kathleen",dur:"2:30"}]}]},
+  "elvis presley|elvis the legend lives on":{sides:[{label:"Side A",tracks:[{name:"That's All Right",dur:"1:57"},{name:"Heartbreak Hotel",dur:"2:08"},{name:"Hound Dog",dur:"2:16"},{name:"Jailhouse Rock",dur:"2:33"},{name:"Don't Be Cruel",dur:"2:02"},{name:"All Shook Up",dur:"1:57"}]},{label:"Side B",tracks:[{name:"Love Me Tender",dur:"2:45"},{name:"Return to Sender",dur:"2:08"},{name:"In the Ghetto",dur:"2:43"},{name:"Suspicious Minds",dur:"4:21"},{name:"Always on My Mind",dur:"3:37"},{name:"The Wonder of You",dur:"2:43"}]}]},
+  "elvis presley|gold records volume 5":{sides:[{label:"Side A",tracks:[{name:"Sing You Children",dur:"2:34"},{name:"(You're the) Devil in Disguise",dur:"2:22"},{name:"Bossa Nova Baby",dur:"2:04"},{name:"Man of the World",dur:"2:15"},{name:"Spinout",dur:"2:04"},{name:"All That I Am",dur:"2:15"}]},{label:"Side B",tracks:[{name:"Am I Ready",dur:"2:14"},{name:"Easy Question",dur:"2:05"},{name:"Puppet on a String",dur:"2:08"},{name:"Joshua Fit the Battle",dur:"2:27"},{name:"Milky White Way",dur:"2:10"},{name:"Long Lonely Highway",dur:"2:34"}]}]},
+  "elvis presley|his hand in mine":{sides:[{label:"Side A",tracks:[{name:"His Hand in Mine",dur:"2:32"},{name:"I'm Gonna Walk Dem Golden Stairs",dur:"1:48"},{name:"In My Father's House",dur:"2:03"},{name:"Milky White Way",dur:"2:10"},{name:"Known Only to Him",dur:"2:36"},{name:"I Believe in the Man in the Sky",dur:"2:02"}]},{label:"Side B",tracks:[{name:"Joshua Fit the Battle",dur:"2:27"},{name:"Jesus Knows What I Need",dur:"2:04"},{name:"Swing Down Sweet Chariot",dur:"2:24"},{name:"Mansion Over the Hilltop",dur:"2:13"},{name:"If We Never Meet Again",dur:"2:02"},{name:"Working on the Building",dur:"2:14"}]}]},
+  "elvis presley|moody blues":{sides:[{label:"Side A",tracks:[{name:"Gentle on My Mind",dur:"2:23"},{name:"From a Jack to a King",dur:"2:04"},{name:"Almost in Love",dur:"2:18"},{name:"Edge of Reality",dur:"2:37"},{name:"A Little Less Conversation",dur:"2:03"}]},{label:"Side B",tracks:[{name:"Charro!",dur:"2:36"},{name:"Stay Away, Joe",dur:"2:14"},{name:"Dominick",dur:"2:04"},{name:"US Male",dur:"2:10"},{name:"You'll Never Walk Alone",dur:"2:10"},{name:"We Call on Him",dur:"2:26"}]}]},
+  "genesis|three sides live":{sides:[{label:"Side A",tracks:[{name:"Turn It On Again",dur:"8:48"},{name:"Dodo / Lurker",dur:"7:40"}]},{label:"Side B",tracks:[{name:"Abacab",dur:"7:55"},{name:"Behind the Lines",dur:"6:29"},{name:"Duchess",dur:"6:20"}]},{label:"Side C",tracks:[{name:"Me and Sarah Jane",dur:"6:02"},{name:"Follow You Follow Me",dur:"3:24"},{name:"Misunderstanding",dur:"3:40"},{name:"In the Cage (Medley)",dur:"8:34"}]},{label:"Side D",tracks:[{name:"Paperlate",dur:"3:40"},{name:"You Might Recall",dur:"4:14"},{name:"Me and Virgil",dur:"4:58"},{name:"Evidence of Autumn",dur:"4:54"},{name:"Open Door",dur:"4:02"}]}]},
+  "george jones|i am what i am":{sides:[{label:"Side A",tracks:[{name:"I Am What I Am",dur:"2:48"},{name:"He Stopped Loving Her Today",dur:"3:12"},{name:"A Hard Act to Follow",dur:"2:44"},{name:"Still Doin' Time",dur:"2:31"}]},{label:"Side B",tracks:[{name:"Yesterday's Wine",dur:"3:47"},{name:"If Drinkin' Don't Kill Me (Her Memory Will)",dur:"3:08"},{name:"You've Still Got a Place in My Heart",dur:"2:55"},{name:"Shine On (Shine All Your Sweet Love on Me)",dur:"2:38"}]}]},
+  "gordon lightfoot|gord's gold":{sides:[{label:"Side A",tracks:[{name:"I'm Not Sayin'",dur:"2:42"},{name:"Ribbon of Darkness",dur:"3:09"},{name:"Early Morning Rain",dur:"3:32"},{name:"Steel Rail Blues",dur:"2:41"},{name:"Sixteen Miles (To Seven Lakes)",dur:"2:40"}]},{label:"Side B",tracks:[{name:"Cotton Jenny",dur:"3:45"},{name:"Sundown",dur:"3:33"},{name:"Beautiful",dur:"3:10"},{name:"The Last Time I Saw Her",dur:"2:29"},{name:"Seven Island Suite",dur:"4:49"}]},{label:"Side C",tracks:[{name:"The Wreck of the Edmund Fitzgerald",dur:"6:31"},{name:"Carefree Highway",dur:"3:04"},{name:"Rainy Day People",dur:"2:59"},{name:"Cherokee Bend",dur:"3:29"}]},{label:"Side D",tracks:[{name:"Race Among the Ruins",dur:"3:40"},{name:"Provincial Weekend",dur:"3:21"},{name:"The House You Live In",dur:"3:28"},{name:"Don Quixote",dur:"3:42"}]}]},
+  "gordon lightfoot|old dan's records":{sides:[{label:"Side A",tracks:[{name:"Farewell to Annabel",dur:"3:46"},{name:"That Same Old Obsession",dur:"3:33"},{name:"Old Dan's Records",dur:"3:12"},{name:"Sit Down Young Stranger",dur:"5:33"}]},{label:"Side B",tracks:[{name:"Beautiful",dur:"3:10"},{name:"Lazy Mornin'",dur:"3:01"},{name:"You Are What I Am",dur:"3:26"},{name:"The Same Old Loverman",dur:"3:43"},{name:"Mother of a Miner's Child",dur:"3:45"}]}]},
+  "grand funk|shine on":{sides:[{label:"Side A",tracks:[{name:"Shine On",dur:"3:52"},{name:"Mr. Pretty Boy",dur:"3:33"},{name:"Mountain",dur:"3:06"},{name:"Ain't Got Nobody",dur:"3:58"}]},{label:"Side B",tracks:[{name:"Some Kind of Wonderful",dur:"3:30"},{name:"Wild",dur:"3:26"},{name:"Flight of the Phoenix",dur:"3:20"},{name:"I Can Feel Him in the Morning",dur:"4:14"}]}]},
+  "gregory alan isakov|the weatherman":{sides:[{label:"Side A",tracks:[{name:"Big Black Car",dur:"3:18"},{name:"Stable Song",dur:"3:32"},{name:"Amsterdam",dur:"3:43"},{name:"The Weatherman",dur:"3:10"},{name:"Words",dur:"3:37"}]},{label:"Side B",tracks:[{name:"Second Chances",dur:"3:14"},{name:"If I Go, I'm Goin'",dur:"3:27"},{name:"Master and a Hound",dur:"3:11"},{name:"That Moon Song",dur:"3:49"},{name:"This Empty Northern Hemisphere",dur:"4:16"}]}]},
+  "hanoi rocks|self-destruction blues":{sides:[{label:"Side A",tracks:[{name:"Self Destruction Blues",dur:"3:28"},{name:"Taxi Driver",dur:"3:15"},{name:"Pipeline",dur:"2:44"},{name:"Tragedy",dur:"3:10"},{name:"Café Avenue",dur:"3:45"}]},{label:"Side B",tracks:[{name:"11th Street Kids",dur:"3:27"},{name:"Nothing New Under the Sun",dur:"3:36"},{name:"Pretender",dur:"3:21"},{name:"Village Girl",dur:"3:02"},{name:"Walking with My Angel",dur:"3:55"}]}]},
+  "jimi hendrix|hendrix high live and dirty":{sides:[{label:"Side A",tracks:[{name:"Tax Free",dur:"6:30"},{name:"I Don't Live Today",dur:"5:04"},{name:"Red House",dur:"7:42"}]},{label:"Side B",tracks:[{name:"Hear My Train a Comin'",dur:"8:00"},{name:"Voodoo Chile",dur:"6:30"},{name:"Purple Haze",dur:"3:39"}]}]},
+  "jimi hendrix|smash hits":{sides:[{label:"Side A",tracks:[{name:"Purple Haze",dur:"2:50"},{name:"Fire",dur:"2:34"},{name:"The Wind Cries Mary",dur:"3:13"},{name:"Can You See Me",dur:"2:35"},{name:"Hey Joe",dur:"3:29"},{name:"All Along the Watchtower",dur:"3:55"}]},{label:"Side B",tracks:[{name:"Stone Free",dur:"3:35"},{name:"Crosstown Traffic",dur:"2:26"},{name:"Manic Depression",dur:"3:42"},{name:"Remember",dur:"2:47"},{name:"Red House",dur:"3:44"},{name:"Foxy Lady",dur:"3:15"}]}]},
+  "joe cocker|greatest hits":{sides:[{label:"Side A",tracks:[{name:"Up Where We Belong",dur:"4:06"},{name:"You Are So Beautiful",dur:"2:38"},{name:"With a Little Help from My Friends",dur:"4:53"},{name:"Delta Lady",dur:"3:32"}]},{label:"Side B",tracks:[{name:"The Letter",dur:"2:11"},{name:"Unchain My Heart",dur:"3:38"},{name:"When the Night Comes",dur:"4:36"},{name:"Feelin' Alright",dur:"4:48"}]}]},
+  "john cougar mellencamp|uh-huh":{sides:[{label:"Side A",tracks:[{name:"Crumblin' Down",dur:"3:29"},{name:"Pink Houses",dur:"4:32"},{name:"Authority Song",dur:"3:02"},{name:"Warmer Place to Sleep",dur:"3:13"}]},{label:"Side B",tracks:[{name:"Jackie O",dur:"3:57"},{name:"Play Guitar",dur:"3:43"},{name:"Serious Business",dur:"3:30"},{name:"Lovin' Mother Fo Ya",dur:"3:19"},{name:"Golden Gates",dur:"3:54"}]}]},
+  "kingdom come|get it on":{sides:[{label:"Side A",tracks:[{name:"Get It On",dur:"4:42"},{name:"Shout It Out",dur:"4:18"},{name:"What Love Can Be",dur:"4:02"},{name:"17",dur:"4:18"}]},{label:"Side B",tracks:[{name:"The Shuffle",dur:"3:28"},{name:"Loving You",dur:"4:24"},{name:"Future Child (Moonchild Song)",dur:"4:37"},{name:"Now Forever More",dur:"5:12"},{name:"Hideaway",dur:"4:08"}]}]},
+  "lil durk|the voice of the heroes":{sides:[{label:"Side A",tracks:[{name:"Voice of the Heroes",dur:"2:43"},{name:"Still Trappin'",dur:"3:05"},{name:"Man of My Word",dur:"2:34"},{name:"Hats Off",dur:"3:28"},{name:"Finesse Out the Gang Way",dur:"2:23"}]},{label:"Side B",tracks:[{name:"2040",dur:"3:23"},{name:"More Less",dur:"3:06"},{name:"U&M",dur:"3:20"},{name:"Whooped (feat. Young Thug)",dur:"3:35"},{name:"Petty Won't Do",dur:"2:54"}]}]},
+  "luciano pavarotti|o holy night":{sides:[{label:"Side A",tracks:[{name:"O Holy Night (Cantique de Noël)",dur:"4:12"},{name:"Ave Maria (Schubert)",dur:"5:18"},{name:"Gesù Bambino",dur:"4:07"},{name:"O Come All Ye Faithful",dur:"3:31"}]},{label:"Side B",tracks:[{name:"Silent Night",dur:"3:44"},{name:"Adeste Fideles",dur:"3:12"},{name:"Tu Scendi dalle Stelle",dur:"3:28"},{name:"White Christmas",dur:"3:10"}]}]},
+  "lynyrd skynyrd|give me back my bullets":{sides:[{label:"Side A",tracks:[{name:"Give Me Back My Bullets",dur:"3:26"},{name:"Every Mother's Son",dur:"3:42"},{name:"Searching",dur:"3:31"},{name:"Double Trouble",dur:"3:15"},{name:"Roll Gypsy Roll",dur:"3:48"}]},{label:"Side B",tracks:[{name:"Cry for the Bad Man",dur:"5:07"},{name:"Ain't No Good Life",dur:"4:12"},{name:"All I Can Do Is Write About It",dur:"4:28"},{name:"Going Home",dur:"3:57"}]}]},
+  "neil diamond|you don't bring me flowers":{sides:[{label:"Side A",tracks:[{name:"Forever in Blue Jeans",dur:"2:49"},{name:"Remember Me",dur:"3:06"},{name:"You Don't Bring Me Flowers",dur:"3:20"},{name:"The American Popular Song",dur:"4:34"}]},{label:"Side B",tracks:[{name:"Say Maybe",dur:"3:02"},{name:"Pretty Amazing Grace",dur:"3:30"},{name:"Memories",dur:"3:02"},{name:"You Don't Bring Me Flowers (Duet with Barbra Streisand)",dur:"3:20"}]}]},
+  "pat benatar|pat benatar":{sides:[{label:"Side A",tracks:[{name:"Heartbreaker",dur:"4:28"},{name:"I Need a Lover",dur:"5:51"},{name:"If You Think You Know How to Love Me",dur:"3:16"},{name:"In the Heat of the Night",dur:"4:01"}]},{label:"Side B",tracks:[{name:"So Sincere",dur:"3:22"},{name:"Rated X",dur:"3:28"},{name:"Don't Let It Show",dur:"3:01"},{name:"No You Don't",dur:"2:34"},{name:"We Live for Love",dur:"3:02"}]}]},
+  "peter frampton|frampton comes alive! (special edition)":{sides:[{label:"Side A",tracks:[{name:"Something's Happening",dur:"5:25"},{name:"Doobie Wah",dur:"6:23"},{name:"Show Me the Way",dur:"6:50"}]},{label:"Side B",tracks:[{name:"It's a Plain Shame",dur:"6:19"},{name:"All I Want to Be (Is by Your Side)",dur:"7:11"},{name:"Wind of Change",dur:"7:34"}]},{label:"Side C",tracks:[{name:"Baby, I Love Your Way",dur:"8:17"},{name:"I Wanna Go to the Sun",dur:"6:34"}]},{label:"Side D",tracks:[{name:"Penny for Your Thoughts",dur:"5:12"},{name:"(I'll Give You) Money",dur:"6:22"},{name:"Shine On",dur:"5:52"},{name:"Jumping Jack Flash / Do You Feel Like We Do",dur:"14:15"}]}]},
+  "peter frampton & the bee gees|sgt. pepper's lonely hearts club band":{sides:[{label:"Side A",tracks:[{name:"Sgt. Pepper's Lonely Hearts Club Band",dur:"2:00"},{name:"With a Little Help from My Friends",dur:"4:18"},{name:"Here Comes the Sun",dur:"3:38"},{name:"Getting Better",dur:"3:28"}]},{label:"Side B",tracks:[{name:"Lucy in the Sky with Diamonds",dur:"4:25"},{name:"I Want You (She's So Heavy)",dur:"4:58"},{name:"Good Morning Good Morning",dur:"2:46"},{name:"She's Leaving Home",dur:"4:15"}]},{label:"Side C",tracks:[{name:"Oh! Darling",dur:"4:22"},{name:"Maxwell's Silver Hammer",dur:"3:38"},{name:"Polythene Pam / She Came In Through the Bathroom Window",dur:"4:26"},{name:"Nowhere Man",dur:"4:10"}]},{label:"Side D",tracks:[{name:"Got to Get You Into My Life",dur:"3:05"},{name:"Strawberry Fields Forever",dur:"5:04"},{name:"When I'm Sixty-Four",dur:"3:09"},{name:"The Long and Winding Road",dur:"3:40"},{name:"Sgt. Pepper's (Reprise) / With a Little Help (Reprise)",dur:"3:05"}]}]},
+  "quarterflash|quarterflash":{sides:[{label:"Side A",tracks:[{name:"Harden My Heart",dur:"3:34"},{name:"Cruisin' with the Deuce",dur:"4:25"},{name:"Find Another Fool",dur:"3:28"},{name:"Right Kind of Love",dur:"3:31"}]},{label:"Side B",tracks:[{name:"Take Me to Heart",dur:"3:57"},{name:"Critical Times",dur:"3:55"},{name:"Don't Be Lonely",dur:"3:47"},{name:"Wait for Me",dur:"4:29"}]}]},
+  "queensrÿche|operation: mindcrime":{sides:[{label:"Side A",tracks:[{name:"I Remember Now",dur:"1:05"},{name:"Anarchy-X",dur:"1:27"},{name:"Revolution Calling",dur:"5:01"},{name:"Operation: Mindcrime",dur:"3:47"},{name:"Speak",dur:"1:56"},{name:"Spreading the Disease",dur:"4:13"}]},{label:"Side B",tracks:[{name:"The Mission",dur:"4:14"},{name:"Suite Sister Mary",dur:"10:36"},{name:"The Needle Lies",dur:"3:44"},{name:"Electric Requiem",dur:"1:52"}]},{label:"Side C",tracks:[{name:"Breaking the Silence",dur:"4:36"},{name:"I Don't Believe in Love",dur:"4:28"},{name:"Waiting for 22",dur:"1:47"},{name:"My Empty Room",dur:"1:43"},{name:"Eyes of a Stranger",dur:"5:16"}]}]},
+  "simon & garfunkel|greatest hits":{sides:[{label:"Side A",tracks:[{name:"Mrs. Robinson",dur:"3:35"},{name:"For Emily, Whenever I May Find Her",dur:"2:07"},{name:"The Boxer",dur:"5:10"},{name:"The 59th Street Bridge Song (Feelin' Groovy)",dur:"1:46"},{name:"The Sound of Silence",dur:"3:05"}]},{label:"Side B",tracks:[{name:"I Am a Rock",dur:"2:51"},{name:"Scarborough Fair/Canticle",dur:"3:10"},{name:"Homeward Bound",dur:"2:15"},{name:"Bridge over Troubled Water",dur:"4:52"},{name:"America",dur:"3:33"}]}]},
+  "stevie nicks|rock a little":{sides:[{label:"Side A",tracks:[{name:"I Can't Wait",dur:"4:42"},{name:"Rock a Little (Go Ahead Lily)",dur:"5:27"},{name:"I Sing for the Things",dur:"4:21"},{name:"Sister Honey",dur:"5:19"}]},{label:"Side B",tracks:[{name:"Has Anyone Ever Written Anything for You",dur:"4:39"},{name:"Imperial Hotel",dur:"4:37"},{name:"No Spoken Word",dur:"5:12"},{name:"Talk to Me",dur:"3:56"},{name:"The Old Grey Whistle Test",dur:"4:41"}]}]},
+  "the babys|union jacks":{sides:[{label:"Side A",tracks:[{name:"Back on My Feet Again",dur:"3:47"},{name:"Too Far Gone",dur:"3:22"},{name:"Running to You",dur:"3:54"},{name:"Isn't It Time",dur:"3:47"}]},{label:"Side B",tracks:[{name:"Union Jacks",dur:"3:30"},{name:"The Word Is Out",dur:"3:04"},{name:"Love Don't Prove I'm Right",dur:"3:28"},{name:"Died in Your Arms",dur:"3:41"}]}]},
+  "the firm|the firm":{sides:[{label:"Side A",tracks:[{name:"Closer",dur:"4:07"},{name:"Make or Break",dur:"4:09"},{name:"Someone to Love",dur:"4:46"},{name:"Together",dur:"5:17"}]},{label:"Side B",tracks:[{name:"Radioactive",dur:"4:53"},{name:"You've Lost That Lovin' Feelin'",dur:"4:19"},{name:"Money Can Buy",dur:"4:16"},{name:"Midnight Moonlight",dur:"5:58"}]}]},
+  "the outlaws|ghost riders":{sides:[{label:"Side A",tracks:[{name:"Ghost Riders in the Sky",dur:"5:50"},{name:"(Ghost) Riders in the Sky (Radio Edit)",dur:"3:43"},{name:"Devil's Road",dur:"4:23"},{name:"Prisoner",dur:"4:31"}]},{label:"Side B",tracks:[{name:"White Lightning",dur:"4:02"},{name:"Blues Brothers",dur:"4:17"},{name:"Hurry Sundown",dur:"3:58"},{name:"Green Grass and High Tides",dur:"5:37"}]}]},
+  "the outlaws|wanted!":{sides:[{label:"Side A",tracks:[{name:"Stick Together",dur:"3:54"},{name:"Gunsmoke",dur:"3:49"},{name:"So Afraid",dur:"4:21"},{name:"Freeborn Man",dur:"3:42"}]},{label:"Side B",tracks:[{name:"Wichita Jail",dur:"3:50"},{name:"Best in the West",dur:"4:12"},{name:"Hard Way",dur:"5:17"},{name:"Brand New Kind of Love",dur:"5:52"}]}]},
+  "the power station|the power station":{sides:[{label:"Side A",tracks:[{name:"Some Like It Hot",dur:"4:07"},{name:"Murderess",dur:"4:30"},{name:"Lonely Tonight",dur:"4:09"},{name:"Communication",dur:"3:56"}]},{label:"Side B",tracks:[{name:"Get It On (Bang a Gong)",dur:"4:34"},{name:"Go to Zero",dur:"4:30"},{name:"Harvest for the World",dur:"5:15"},{name:"Still in Your Heart",dur:"3:46"}]}]},
+  "the thompson twins|the best of the thompson twins":{sides:[{label:"Side A",tracks:[{name:"Hold Me Now",dur:"4:43"},{name:"Doctor! Doctor!",dur:"3:54"},{name:"In the Name of Love",dur:"3:31"},{name:"King for a Day",dur:"4:07"}]},{label:"Side B",tracks:[{name:"Lay Your Hands on Me",dur:"4:50"},{name:"We Are Detective",dur:"4:44"},{name:"Long Goodbye",dur:"4:02"},{name:"If You Were Here",dur:"4:01"}]}]},
+  "tnt|knights of the new thunder":{sides:[{label:"Side A",tracks:[{name:"Knights of the New Thunder",dur:"4:44"},{name:"Seven Seas",dur:"4:09"},{name:"Tell No Tales",dur:"3:31"},{name:"Deadly Metal",dur:"3:58"}]},{label:"Side B",tracks:[{name:"Caught Between the Tigers",dur:"3:34"},{name:"Try the Love",dur:"3:51"},{name:"As Far as the Eye Can See",dur:"4:14"},{name:"Shining Through",dur:"4:46"}]}]},
+  "waylon jennings|greatest hits":{sides:[{label:"Side A",tracks:[{name:"Are You Ready for the Country",dur:"3:27"},{name:"Bob Wills Is Still the King",dur:"3:16"},{name:"Luckenbach, Texas (Back to the Basics of Love)",dur:"4:14"},{name:"The Wurlitzer Prize (I Don't Want to Get Over You)",dur:"3:18"}]},{label:"Side B",tracks:[{name:"Mammas Don't Let Your Babies Grow Up to Be Cowboys",dur:"3:59"},{name:"I've Always Been Crazy",dur:"3:35"},{name:"Good Hearted Woman",dur:"3:07"},{name:"Amanda",dur:"3:31"}]}]},
+  "whitesnake|whitesnake":{sides:[{label:"Side A",tracks:[{name:"Still of the Night",dur:"6:36"},{name:"Bad Boys",dur:"4:06"},{name:"Give Me All Your Love",dur:"3:44"},{name:"Is This Love",dur:"4:46"}]},{label:"Side B",tracks:[{name:"Children of the Night",dur:"4:58"},{name:"Crying in the Rain",dur:"4:47"},{name:"Fool for Your Loving",dur:"4:07"},{name:"Here I Go Again",dur:"4:33"},{name:"You're Gonna Break My Heart Again",dur:"3:46"}]}]},
+  "willie nelson|always on my mind":{sides:[{label:"Side A",tracks:[{name:"Always on My Mind",dur:"3:39"},{name:"Do Right Woman — Do Right Man",dur:"3:26"},{name:"A Whiter Shade of Pale",dur:"4:04"},{name:"Tell Me Why",dur:"2:42"}]},{label:"Side B",tracks:[{name:"Let It Be Me",dur:"3:01"},{name:"Give Me Love (Give Me Peace on Earth)",dur:"3:25"},{name:"How Do You Feel About Foolin' Around",dur:"2:44"},{name:"You Were Always on My Mind",dur:"2:57"}]}]},
+  "y&t|contagious":{sides:[{label:"Side A",tracks:[{name:"Contagious",dur:"4:02"},{name:"She's a Liar",dur:"3:53"},{name:"Temptation",dur:"4:36"},{name:"I'll Cry for You",dur:"4:14"}]},{label:"Side B",tracks:[{name:"Don't Stop Runnin'",dur:"4:26"},{name:"Hang 'em High",dur:"4:16"},{name:"Rhythm or Not",dur:"4:12"},{name:"One Night",dur:"4:32"},{name:"Looks Like Trouble",dur:"4:44"}]}]},
+  "blackbird|moses jones":{sides:[{label:"Side A",tracks:[{name:"Moses Jones",dur:"4:22"},{name:"Ride On",dur:"3:48"},{name:"Mountain Woman",dur:"3:55"},{name:"Free Man",dur:"4:11"}]},{label:"Side B",tracks:[{name:"Blackbird",dur:"3:37"},{name:"River Road",dur:"4:02"},{name:"Stone Cold",dur:"3:29"},{name:"Southern Wind",dur:"4:45"}]}]},
+  "various artists|saturday night fever (soundtrack)":{sides:[{label:"Side A",tracks:[{name:"Stayin' Alive",dur:"4:45"},{name:"How Deep Is Your Love",dur:"3:50"},{name:"Night Fever",dur:"3:33"},{name:"More Than a Woman",dur:"3:17"}]},{label:"Side B",tracks:[{name:"If I Can't Have You",dur:"3:13"},{name:"A Fifth of Beethoven",dur:"3:18"},{name:"More Than a Woman (Tavares)",dur:"3:29"},{name:"Manhattan Skyline",dur:"4:54"}]},{label:"Side C",tracks:[{name:"Calypso Breakdown",dur:"7:49"},{name:"Night on Disco Mountain",dur:"4:34"},{name:"Open Sesame, Pt. 1 & 2",dur:"3:38"},{name:"Jive Talkin'",dur:"3:41"}]},{label:"Side D",tracks:[{name:"Boogie Shoes",dur:"2:24"},{name:"Salsation",dur:"3:44"},{name:"K-Jee",dur:"3:47"},{name:"Disco Inferno",dur:"10:52"}]}]},
+  "various artists|golden christmas favorites":{sides:[{label:"Side A",tracks:[{name:"White Christmas",dur:"3:02"},{name:"Rudolph the Red-Nosed Reindeer",dur:"2:18"},{name:"Santa Claus Is Comin' to Town",dur:"2:05"},{name:"O Holy Night",dur:"3:44"},{name:"Jingle Bells",dur:"2:14"}]},{label:"Side B",tracks:[{name:"Frosty the Snowman",dur:"2:28"},{name:"Winter Wonderland",dur:"2:21"},{name:"The Christmas Song",dur:"3:13"},{name:"Deck the Halls",dur:"1:58"},{name:"Silent Night",dur:"2:44"}]}]},
+  "cruisin|5 lp set":{sides:[{label:"Side A (1955)",tracks:[{name:"Rock Around the Clock — Bill Haley",dur:"2:10"},{name:"Maybellene — Chuck Berry",dur:"2:19"},{name:"Only You — The Platters",dur:"2:35"},{name:"Tutti Frutti — Little Richard",dur:"2:22"}]},{label:"Side B (1956)",tracks:[{name:"Hound Dog — Elvis Presley",dur:"2:16"},{name:"Blue Suede Shoes — Carl Perkins",dur:"2:10"},{name:"In the Still of the Night — The Five Satins",dur:"2:56"},{name:"Great Balls of Fire — Jerry Lee Lewis",dur:"1:49"}]},{label:"Side C (1957)",tracks:[{name:"That'll Be the Day — Buddy Holly",dur:"2:04"},{name:"Whole Lot of Shakin' Going On — Jerry Lee Lewis",dur:"2:50"},{name:"School Day — Chuck Berry",dur:"2:40"},{name:"Bye Bye Love — Everly Brothers",dur:"2:06"}]},{label:"Side D (1958)",tracks:[{name:"Johnny B. Goode — Chuck Berry",dur:"2:41"},{name:"Splish Splash — Bobby Darin",dur:"2:05"},{name:"At the Hop — Danny & the Juniors",dur:"2:23"},{name:"Summertime Blues — Eddie Cochran",dur:"2:08"}]},{label:"Side E (Various)",tracks:[{name:"Venus — Frankie Avalon",dur:"2:18"},{name:"Charlie Brown — The Coasters",dur:"2:14"},{name:"Stagger Lee — Lloyd Price",dur:"2:22"},{name:"16 Candles — The Crests",dur:"2:40"}]}]},
 };
 
 // ── COLLECTION DATA ──
@@ -723,7 +946,7 @@ let vinylCollection=[
   {id:7,artist:"Bad Company",title:"Run with the Pack",year:1976,genre:"Classic Rock",shelf:"A",condition:cond(6)},
   {id:8,artist:"Billy Idol",title:"Rebel Yell",year:1983,genre:"New Wave",shelf:"A",condition:cond(0)},
   {id:9,artist:"Black Sabbath",title:"Paranoid",year:1970,genre:"Heavy Metal",shelf:"A",condition:cond(1)},
-  {id:10,artist:"Blackbird",title:"Moses Jones",year:1975,genre:"Classic Rock",shelf:"A",condition:cond(2)},
+  {id:10,artist:"Mose Jones",title:"Blackbird",year:1975,genre:"Classic Rock",shelf:"A",condition:cond(2)},
   {id:11,artist:"Bob Seger & the Silver Bullet Band",title:"Against the Wind",year:1980,genre:"Classic Rock",shelf:"A",condition:cond(3)},
   {id:12,artist:"Bob Seger & the Silver Bullet Band",title:"Night Moves",year:1976,genre:"Classic Rock",shelf:"A",condition:cond(4)},
   {id:13,artist:"Boston",title:"Boston",year:1976,genre:"Classic Rock",shelf:"B",condition:cond(5)},
@@ -748,7 +971,7 @@ let vinylCollection=[
   {id:32,artist:"Eddie and the Cruisers",title:"Soundtrack",year:1983,genre:"Soundtrack",shelf:"F",condition:cond(3)},
   {id:33,artist:"Eddie and the Cruisers",title:"Soundtrack (Alt Press)",year:1983,genre:"Soundtrack",shelf:"F",condition:cond(4)},
   {id:34,artist:"Electric Light Orchestra",title:"Greatest Hits",year:1979,genre:"Classic Rock",shelf:"C",condition:cond(5)},
-  {id:35,artist:"Electric Light Orchestra",title:"OLELO",year:1981,genre:"Classic Rock",shelf:"C",condition:cond(6)},
+  {id:35,artist:"Electric Light Orchestra",title:"Olé ELO",year:1981,genre:"Classic Rock",shelf:"C",condition:cond(6)},
   {id:36,artist:"Elvis Presley",title:"Double Dynamite",year:1975,genre:"Classic Rock",shelf:"C",condition:cond(0)},
   {id:37,artist:"Elvis Presley",title:"Elvis The Legend Lives On",year:1975,genre:"Classic Rock",shelf:"C",condition:cond(1)},
   {id:38,artist:"Elvis Presley",title:"Gold Records Volume 5",year:1984,genre:"Classic Rock",shelf:"C",condition:cond(2)},
@@ -768,14 +991,14 @@ let vinylCollection=[
   {id:52,artist:"Gordon Lightfoot",title:"If You Could Read My Mind",year:1970,genre:"Singer-Songwriter",shelf:"D",condition:cond(2)},
   {id:53,artist:"Gordon Lightfoot",title:"Old Dan's Records",year:1972,genre:"Singer-Songwriter",shelf:"D",condition:cond(3)},
   {id:54,artist:"Gordon Lightfoot",title:"Sundown",year:1974,genre:"Singer-Songwriter",shelf:"D",condition:cond(4)},
-  {id:55,artist:"Grand Funk",title:"Shine On",year:1974,genre:"Classic Rock",shelf:"D",condition:cond(5)},
+  {id:55,artist:"Grand Funk Railroad",title:"Shine On",year:1974,genre:"Classic Rock",shelf:"D",condition:cond(5)},
   {id:56,artist:"Green Day",title:"American Idiot",year:2004,genre:"Punk / Alternative",shelf:"D",condition:cond(6)},
   {id:57,artist:"Gregory Alan Isakov",title:"The Weatherman",year:2013,genre:"Singer-Songwriter",shelf:"D",condition:cond(0)},
   {id:58,artist:"Hanoi Rocks",title:"Self-Destruction Blues",year:1982,genre:"Hard Rock",shelf:"D",condition:cond(1)},
   {id:59,artist:"Heart",title:"Dreamboat Annie",year:1975,genre:"Classic Rock",shelf:"D",condition:cond(2)},
   {id:60,artist:"Heart",title:"Little Queen",year:1977,genre:"Classic Rock",shelf:"D",condition:cond(3)},
   {id:61,artist:"Iron Butterfly",title:"In-A-Gadda-Da-Vida",year:1968,genre:"Classic Rock",shelf:"E",condition:cond(4)},
-  {id:62,artist:"Jimi Hendrix",title:"Hendrix High Live and Dirty",year:1978,genre:"Classic Rock",shelf:"E",condition:cond(5)},
+  {id:62,artist:"Jimi Hendrix",title:"High, Live 'n' Dirty",year:1978,genre:"Classic Rock",shelf:"E",condition:cond(5)},
   {id:63,artist:"Jimi Hendrix",title:"Smash Hits",year:1969,genre:"Classic Rock",shelf:"E",condition:cond(6)},
   {id:64,artist:"Joe Cocker",title:"Greatest Hits",year:1987,genre:"Classic Rock",shelf:"E",condition:cond(0)},
   {id:65,artist:"John Cougar Mellencamp",title:"Uh-Huh",year:1983,genre:"Classic Rock",shelf:"E",condition:cond(1)},
@@ -858,6 +1081,9 @@ function saveConditions(){lsSet("crate_conditions",conditionOverrides)}
 
 // Apply persisted condition overrides on load
 vinylCollection.forEach(a=>{if(conditionOverrides[a.id])a.condition=conditionOverrides[a.id]});
+// Apply persisted genre overrides on load
+const genreOverridesInit=lsGet("crate_genre_overrides",{});
+vinylCollection.forEach(a=>{if(genreOverridesInit[a.id])a.genre=genreOverridesInit[a.id]});
 
 const GRADE_DEFS={
   "M":"Mint — Perfect, unplayed condition. Still sealed or indistinguishable from new.",
@@ -900,9 +1126,28 @@ function buildFilters(){
   const gSel=document.getElementById("genreFilter"),dSel=document.getElementById("decadeFilter");
   while(gSel.options.length>1)gSel.remove(1);
   while(dSel.options.length>1)dSel.remove(1);
-  unique(vinylCollection.map(a=>a.genre)).forEach(g=>gSel.add(new Option(g,g)));
+  allGenres().forEach(g=>gSel.add(new Option(g,g)));
+  gSel.add(new Option("✚ Create your own…","__custom__"));
   unique(vinylCollection.map(a=>a.decade)).sort((a,b)=>a-b).forEach(d=>dSel.add(new Option(decadeLabel(d),d)));
 }
+
+document.getElementById("genreFilter").addEventListener("change",e=>{
+  if(e.target.value==="__custom__"){
+    const name=prompt("Enter new genre name:");
+    if(name&&name.trim()){
+      const g=name.trim();
+      if(!customGenres.includes(g))customGenres.push(g);
+      saveCustomGenres();
+      buildFilters();
+      document.getElementById("genreFilter").value=g;
+      state.genre=g;render();
+    } else {
+      document.getElementById("genreFilter").value=state.genre||"";
+    }
+  } else {
+    state.genre=e.target.value;render();
+  }
+});
 
 // ── RENDER ──
 function escAttr(s){return String(s).replace(/&/g,"&amp;").replace(/"/g,"&quot;")}
@@ -920,7 +1165,7 @@ function render(){
     const coverSrc=customCovers[a.id]||(caaCache[(a.artist+"|"+a.title).toLowerCase()]||getPlaceholder(a.genre));
     return `<article class="card" data-id="${a.id}" tabindex="0" role="button" aria-label="${escAttr(a.artist)} — ${escAttr(a.title)}">
       <div class="card-art">
-        <img src="${escAttr(coverSrc)}" data-artist="${escAttr(a.artist)}" data-title="${escAttr(a.title)}" alt="" loading="lazy">
+        <img src="${escAttr(coverSrc)}" data-artist="${escAttr(a.artist)}" data-title="${escAttr(a.title)}" data-year="${a.year}" alt="" loading="lazy">
         <span class="card-genre-tag">${a.genre}</span>
         <div class="card-overlay-btns">
           <button class="card-icon-btn ${isFav?'fav-active':''}" data-action="fav" data-id="${a.id}" title="${isFav?'Remove from favorites':'Add to favorites'}">${isFav?'♥':'♡'}</button>
@@ -955,7 +1200,63 @@ function render(){
   });
 }
 
-// ── FAVORITES ──
+// ── GENRE EDITOR ──
+const BASE_GENRES=["Classic Rock","Hard Rock","Heavy Metal","Progressive Rock","New Wave","Punk / Alternative","Pop","R&B / Soul","Hip-Hop","Country","Singer-Songwriter","Soundtrack","Classical","Holiday","Compilation"];
+let customGenres=lsGet("crate_custom_genres",[]);
+function saveCustomGenres(){lsSet("crate_custom_genres",customGenres)}
+function allGenres(){return[...new Set([...BASE_GENRES,...customGenres,...vinylCollection.map(a=>a.genre)])].filter(Boolean).sort()}
+
+function openGenreEditor(){
+  const wrap=document.getElementById("genreEditorWrap");
+  if(wrap.style.display!=="none"){closeGenreEditor();return}
+  const sel=document.getElementById("genreEditorSelect");
+  sel.innerHTML="";
+  const a=vinylCollection.find(x=>x.id===currentDetailId);
+  allGenres().forEach(g=>{const o=new Option(g,g);if(a&&a.genre===g)o.selected=true;sel.add(o)});
+  sel.add(new Option("✚ Create your own…","__custom__"));
+  sel.onchange=()=>{
+    document.getElementById("customGenreWrap").style.display=sel.value==="__custom__"?"block":"none";
+    if(sel.value==="__custom__")document.getElementById("customGenreInput").focus();
+  };
+  wrap.style.display="block";
+  sel.focus();
+}
+function closeGenreEditor(){
+  document.getElementById("genreEditorWrap").style.display="none";
+  document.getElementById("customGenreWrap").style.display="none";
+  document.getElementById("customGenreInput").value="";
+}
+function saveGenreEdit(){
+  const sel=document.getElementById("genreEditorSelect");
+  if(sel.value==="__custom__"){applyCustomGenre();return}
+  applyGenre(sel.value);
+}
+function applyCustomGenre(){
+  const input=document.getElementById("customGenreInput");
+  const val=input.value.trim();
+  if(!val){showToast("Enter a genre name");return}
+  if(!customGenres.includes(val))customGenres.push(val);
+  saveCustomGenres();
+  applyGenre(val);
+}
+function applyGenre(genre){
+  if(!currentDetailId||!genre)return;
+  const a=vinylCollection.find(x=>x.id===currentDetailId);
+  if(!a)return;
+  a.genre=genre;
+  document.getElementById("modalGenreText").textContent=genre;
+  const ua=lsGet("crate_user_albums",[]);
+  const idx=ua.findIndex(x=>x.id===currentDetailId);
+  if(idx!==-1){ua[idx].genre=genre;lsSet("crate_user_albums",ua);}
+  // Also persist genre override for built-in albums
+  let genreOverrides=lsGet("crate_genre_overrides",{});
+  genreOverrides[currentDetailId]=genre;lsSet("crate_genre_overrides",genreOverrides);
+  closeGenreEditor();
+  buildFilters();render();
+  showToast(`Genre updated to "${genre}"`);
+}
+
+
 function toggleFavorite(id){
   if(favorites.has(id)){favorites.delete(id);showToast("Removed from favorites")}
   else{favorites.add(id);showToast("♥ Added to favorites")}
@@ -1049,7 +1350,9 @@ function openDetail(id){
   const modalArt=document.getElementById("modalArt");
   modalArt.src=customCovers[id]||getPlaceholder(a.genre);modalArt.alt=a.title;
   if(!customCovers[id])lookupCoverArt(a.artist,a.title).then(url=>{if(url)modalArt.src=url});
-  document.getElementById("modalGenre").textContent=a.genre;
+  document.getElementById("modalGenreText").textContent=a.genre;
+  document.getElementById("modalGenre").title="Click to change genre";
+  closeGenreEditor();
   document.getElementById("modalTitle").textContent=a.title;
   document.getElementById("modalArtist").textContent=a.artist;
   document.getElementById("modalYear").textContent=a.year;
@@ -1262,7 +1565,64 @@ const ALBUM_FACTS = {
   "toto|toto iv (africa)|1982":{studio:"Sunset Sound & Record One Studios, Los Angeles",producer:"Toto",facts:["Won six Grammy Awards — more than any other album at the 1984 Grammys including Album of the Year","'Africa' was written by David Paich and Jeff Porcaro — Paich wrote it imagining what Africa looked like based on documentaries since he'd never been","The opening percussion effect on 'Africa' was created using a cardboard box and a rolled-up newspaper","'Rosanna' was written for actress Rosanna Arquette who was dating Steve Lukather at the time","Every member of Toto was an in-demand session musician — they played on hundreds of other albums including Michael Jackson's Thriller","'Africa' became a viral phenomenon in the 2010s, introducing the song to an entirely new generation"]},
   "robert plant|pictures at eleven|1982":{studio:"Rockfield Studios, Monmouth, Wales",producer:"Robert Plant & Jezz Woodroffe",facts:["Plant's debut solo album after Led Zeppelin disbanded following John Bonham's death in 1980","Recorded at Rockfield Studios in Wales — the same studio where Queen recorded 'Bohemian Rhapsody'","Plant deliberately moved away from the heavy rock of Zeppelin toward a more atmospheric, keyboard-driven sound","'Burning Down One Side' reached the top 20 in the UK","Robbie Blunt's understated guitar work was a deliberate contrast to Jimmy Page's flamboyant style","The title refers to the time 11:00 as a moment of transition — the end of Zeppelin and the start of something new"]},
   "robert plant|the principle of moments|1983":{studio:"RAK Studios, London & Rockfield Studios, Wales",producer:"Robert Plant & Jezz Woodroffe",facts:["'Big Log' was Plant's biggest solo hit, reaching #11 in the UK and #20 in the US","The album demonstrated Plant's willingness to embrace synthesizers and atmospheric production","Robbie Blunt's guitar style is notably restrained — Plant wanted texture, not lead guitar heroics","Reached #25 on the Billboard 200 in the US","'In the Mood' was a minor hit that showed Plant's sense of playfulness","Plant has cited this album as the point where he felt truly free of his Led Zeppelin shadow"]},
+
+  "the carpenters|the carpenters|1971":{studio:"A&M Studios, Hollywood",producer:"Jack Daugherty",facts:["Third studio album — it broke the duo into the mainstream with a string of hits","Karen Carpenter played her own drum parts on the recordings, which was almost unheard of at the time for a female pop star","'Rainy Days and Mondays' and 'For All We Know' were both top-5 hits off this album","Karen's rich contralto voice was placed unusually low in the mix by Phil Spector standards — the warmth was intentional","The Carpenters were Richard Nixon's favorite act — he invited them to perform at the White House","The album was recorded at A&M Studios, founded by Herb Alpert, who signed them after hearing a demo tape"]},
+  "chicago|chicago|1969":{studio:"Columbia Recording Studios, New York",producer:"James William Guercio",facts:["Debut album — released as a double LP, which was almost unheard of for a debut act at the time","Originally titled 'Chicago Transit Authority' — the city threatened legal action over the name, so the band shortened it","One of the best-selling debut albums in music history, going to #17 on the Billboard 200","The horn section — Peter Cetera, Terry Kath, Lee Loughnane — set the template for rock-brass fusion","Terry Kath's guitar work impressed Jimi Hendrix, who called him a better guitarist than himself","The album stayed on the charts for 171 weeks"]},
+  "chicago|chicago greatest hits 9|1975":{studio:"Compilation — various studios 1969–1975",producer:"James William Guercio",facts:["First greatest hits collection for Chicago — released at the peak of their commercial powers","Compiled their biggest hits from the band's first six years on Columbia Records","'If You Leave Me Now' came just after this release but it captured the earlier soft-rock and jazz-rock era perfectly","Chicago were one of the best-selling acts of the 1970s — this compilation solidified that legacy","The brass-rock sound Chicago pioneered influenced dozens of acts through the decade","Peter Cetera's bass and vocals became the defining Chicago sound during this period"]},
+  "conway twitty & loretta lynn|we only make believe|1971":{studio:"Bradley's Barn, Mount Juliet, Tennessee",producer:"Owen Bradley",facts:["Recorded at the legendary Bradley's Barn studio in Tennessee, home to the Nashville Sound","First in a series of celebrated duet albums between Twitty and Lynn — they became country's most celebrated duo","The title track went to #1 on the country charts","Owen Bradley had also produced Patsy Cline and Brenda Lee — he brought the same warm, polished production style","Conway and Loretta had an extraordinary natural vocal chemistry — their voices blended unusually well for a duo","The album helped establish duet records as a staple of the Nashville Sound era"]},
+  "david bowie|changesonebowie|1976":{studio:"Compilation — various studios 1969–1975",producer:"Various (Ken Scott, Tony Visconti, David Bowie)",facts:["First official Bowie compilation — spanning his most commercially crucial transformations","Compiled material across Ziggy Stardust, Aladdin Sane, Diamond Dogs, and Young Americans eras","'Space Oddity' was re-released as a single to coincide with the album — it hit #1 in the UK for the first time","The title was a play on his own song 'Changes' — signaling self-awareness about his constant reinvention","'Fame' — his first US #1 — was co-written with John Lennon during a chance studio meeting","The collection introduced his theatrical chameleon persona to a new generation of fans"]},
+  "david gilmour|about face|1984":{studio:"Hookend Manor, Oxfordshire & Olympic Studios, London",producer:"David Gilmour & Bob Ezrin",facts:["Gilmour's second solo album — recorded while Roger Waters was effectively dismantling Pink Floyd","Produced by Bob Ezrin, who had produced The Wall — bringing a familiar cinematic sensibility","'Blue Light' was a top-10 UK hit and received strong MTV rotation","The album was more personal and political than Gilmour's usual work — 'There's No Way Out of Here' was a statement about his frustration with Waters","Pete Townshend played on several tracks — the two had a mutual admiration for each other's guitar work","The album title 'About Face' refers to the military command — a complete 180-degree turn — fitting for a post-Waters statement"]},
+  "the doors|13|1970":{studio:"Compilation — various studios 1967–1969",producer:"Paul Rothchild",facts:["Budget compilation released by Elektra Records — the 13 best-known Doors tracks on a single album","Served as the definitive introduction to the Doors for millions of new listeners","Released just months before Jim Morrison's death in Paris in July 1971","'Light My Fire' dominates Side A — still the band's most recognized track","The compilation spans from their debut self-titled album through Morrison Hotel","A masterclass in sequencing — the track order builds in mood and intensity across the two sides"]},
+  "eddie and the cruisers|soundtrack|1983":{studio:"Various studios",producer:"John Cafferty",facts:["Soundtrack to the cult film of the same name — the music was performed by John Cafferty and the Beaver Brown Band, not a fictional band","'On the Dark Side' became a massive radio hit, reaching #7 on the Billboard Hot 100","The film flopped on release but the soundtrack went platinum — an unusual reversal","John Cafferty's Springsteen-influenced sound was so convincing that many assumed it was a real 1960s band","The soundtrack found new life when the film aired on cable TV and audiences discovered the music","'On the Dark Side' has appeared in countless films and TV shows since its release"]},
+  "eddie and the cruisers|soundtrack (alt press)|1983":{studio:"Various studios",producer:"John Cafferty",facts:["Alternate pressing of the celebrated soundtrack LP — identical music to the original but with different label artwork","The demand for multiple pressings reflected how quickly the soundtrack broke from cult item to mainstream hit","John Cafferty and the Beaver Brown Band toured extensively on the back of the soundtrack's success","'Tender Years' and 'Runaround Sue' were also fan favorites alongside the title track","The film's themes of artistic legacy and lost genius resonated in an era of classic rock nostalgia","The alt pressing is now a collector's item among fans of the film and soundtrack"]},
+  "electric light orchestra|greatest hits|1979":{studio:"Compilation — various studios 1972–1979",producer:"Jeff Lynne",facts:["Compiles ELO's biggest hits from their early years through the disco-pop crossover era","Jeff Lynne's production style — strings over rock guitars — made ELO immediately identifiable","'Mr. Blue Sky' closes the collection and remains one of the most joyful recordings in classic rock","Released at the peak of ELO's commercial powers — the year of Discovery and the Xanadu soundtrack","ELO had 27 top-40 hits in the UK — more than any act except the Beatles in the same era","Lynne famously overdubbed everything — orchestral parts, backing vocals — using extreme precision"]},
+  "electric light orchestra|olelo|1981":{studio:"Musicland Studios, Munich",producer:"Jeff Lynne",facts:["'Time' is the full album this may reference — a concept album set in the year 2095 about a time traveller longing for his own era","Recorded at Musicland Studios in Munich — the same studio used by Queen and Led Zeppelin","Jeff Lynne wrote every song, played most instruments, and produced the record entirely himself","Synthesizers replaced the orchestra for the first time in ELO history — a major shift in their sound","'Hold On Tight' was a massive international hit reaching #4 in the US and #4 in the UK","The futuristic concept was inspired by H.G. Wells and sci-fi literature Lynne had been reading"]},
+  "elvis presley|double dynamite|1975":{studio:"Compilation — RCA Studios, Nashville & Hollywood",producer:"Various",facts:["Budget double LP compilation released by Camden/Pickwick Records during Elvis's RCA contract years","Draws from the mid-period Elvis catalog — film soundtracks and Nashville-era studio recordings","Camden releases like this were common in the 1970s, keeping Elvis's name on record-store shelves between major RCA releases","The title plays on the double-album format — a promotional concept more than an artistic one","Many tracks feature the lush Nashville Sound arrangements typical of Elvis's 1970s output","Collectors note these budget pressings often had different track sequencing than later CD reissues"]},
+  "elvis presley|elvis the legend lives on|1975":{studio:"Compilation — various RCA studios",producer:"Various",facts:["Memorial compilation released during the height of the Elvis-as-legend marketing era","Draws on recordings from multiple decades of Elvis's career with RCA Records","The title reflects how Elvis had become as much myth as musician by the mid-1970s","Marketed heavily in the US and internationally after his Vegas residency made him a cultural institution","The liner notes featured testimonials from fans about what Elvis meant to them","These mid-70s compilations helped sustain Elvis's chart presence as he reduced studio output"]},
+  "elvis presley|gold records volume 5|1984":{studio:"Compilation — various RCA studios 1960–1983",producer:"Various",facts:["Fifth in the long-running 'Gold Records' series — one of RCA's most successful catalog strategies","Released posthumously — Elvis died in 1977, and RCA continued mining the catalog heavily","Spans Elvis's entire recording career from early rockabilly through the gospel and Vegas years","The Gold Records series had begun in 1958 and was the template for how labels would later market legacy artists","'Suspicious Minds' — his final #1 — was included as the commercial and emotional centerpiece","The packaging used the iconic Aloha from Hawaii image, which had become the most recognized Elvis visual"]},
+  "elvis presley|his hand in mine|1960":{studio:"RCA Studio B, Nashville",producer:"Steve Sholes",facts:["Elvis's first gospel album — a deeply personal project he reportedly pushed for himself","Recorded at RCA's legendary Studio B in Nashville — the same studio where most classic country and rock was made in that era","Elvis was a lifelong gospel singer — he called gospel music his first love","The record reached #13 on the Billboard 200 — remarkable for a gospel album","'Milky White Way' became one of his most beloved gospel performances","Elvis won three Grammy Awards in his lifetime — all three were for gospel recordings, including this album's material"]},
+  "elvis presley|moody blues|1969":{studio:"American Sound Studio, Memphis",producer:"Chips Moman",facts:["Recorded at American Sound Studio in Memphis — Elvis's most celebrated recording sessions of the decade","Chips Moman assembled the legendary 'Memphis Boys' session band — considered one of the tightest studio bands ever assembled","'Suspicious Minds' — recorded at these sessions — became Elvis's first #1 single in seven years","The Memphis sessions are widely regarded as Elvis's creative renaissance after years of formulaic Hollywood films","The album captures Elvis sounding energized and genuinely engaged for the first time in years","'In the Ghetto' was also recorded at these sessions — a bold statement for Elvis to make"]},
+  "genesis|three sides live|1982":{studio:"Live recordings — various venues, 1981–1982",producer:"Genesis & Hugh Padgham",facts:["Double live album capturing the Abacab tour — one of Genesis's most commercially successful periods","Title refers to the UK version having three sides of live material and one studio side — the US version was all-live","Recorded at venues across the UK and US during a world tour","'Turn It On Again' became a concert staple — the crowd sing-alongs were legendary","Phil Collins's drumming on the live recordings is considered some of the finest captured on a live album","The album went gold in the UK and demonstrated Genesis's continued commercial strength as a live act"]},
+  "george jones|i am what i am|1980":{studio:"RCA Studios, Nashville",producer:"Billy Sherrill",facts:["Recorded with legendary Nashville producer Billy Sherrill, who defined the polished 'countrypolitan' sound","George Jones was nicknamed 'The Possum' — widely regarded as the greatest pure country singer who ever lived","The title track is a statement of unapologetic authenticity — Jones was known for his refusal to change for commercial trends","Jones's personal life was chaotic during this era — his partnership with Tammy Wynette had just ended","Billy Sherrill's production style used lush string arrangements that some purists criticized but fans loved","The album reflected Jones's mature, settled approach to classic honky-tonk and country balladry"]},
+  "gordon lightfoot|gord's gold|1975":{studio:"Compilation — various studios 1970–1975",producer:"Various",facts:["Double album retrospective spanning Lightfoot's most celebrated period on Reprise Records","Lightfoot re-recorded several early tracks specifically for this compilation — the versions here differ from the originals","'Wreck of the Edmund Fitzgerald' followed shortly after — this album set the stage for his biggest commercial period","Went platinum in the US — a rare achievement for a folk-singer-songwriter at the time","The collection helped establish Lightfoot's reputation internationally, particularly in the US and UK","Covers a decade of songwriting that influenced everyone from Bob Dylan to James Taylor"]},
+  "gordon lightfoot|old dan's records|1972":{studio:"Eastern Sound, Toronto",producer:"Lenny Waronker & Joe Wissert",facts:["Transitional album — Lightfoot moving from pure folk toward a warmer, more orchestrated sound","'Beautiful' is one of Lightfoot's most intimate recordings — a rare love song in his catalog","Produced in Toronto, Lightfoot rarely recorded anywhere else during this period","The album sold modestly but is highly regarded by fans as one of his most personal statements","'That Same Old Obsession' shows his gift for melancholic narrative — a story song about quiet heartbreak","Lightfoot played all his acoustic guitar parts live to tape — minimal overdubbing"]},
+  "grand funk|shine on|1974":{studio:"Grand Funk's own recording facilities, Flint, Michigan",producer:"Jimmy Ienner",facts:["Recorded partly in their home city of Flint, Michigan — Grand Funk stayed fiercely loyal to their blue-collar roots","Grand Funk were one of the best-selling American bands of the early 1970s despite almost universal critical dismissal","'Some Kind of Wonderful' had been covered from the 1967 original — Grand Funk's version became the definitive rock reading","The band self-managed for much of their career, which was extraordinarily rare for an arena-rock act","They sold out Shea Stadium faster than the Beatles had — a fact they were proud to mention repeatedly","Mark Farner's raw, urgent guitar style was an influence on the emerging heartland rock scene"]},
+  "gregory alan isakov|the weatherman|2013":{studio:"Various studios, Colorado",producer:"Gregory Alan Isakov",facts:["Third studio album — widely considered his breakthrough into wider critical recognition","Isakov is a South African-born songwriter who settled in Colorado and runs a farm there","The album was largely self-produced — Isakov controls every aspect of his recordings with unusual care","'Big Black Car' became his most streamed song and an indie folk touchstone","The album's sound — spare acoustic guitar, warm cello, reverb-drenched atmosphere — defined a generation of indie folk","Isakov has said Colorado's open landscape is the primary influence on his writing"]},
+  "hanoi rocks|self-destruction blues|1982":{studio:"Various studios, Finland",producer:"Various",facts:["Compilation of early singles and tracks from the Finnish glam-punk band's formative period","Hanoi Rocks were one of the most influential bands no one talks about — Guns N' Roses, Mötley Crüe, and Faster Pussycat all cited them as direct influences","Frontman Michael Monroe's Keith Richards-meets-New York Dolls style was ahead of its time","The band's career was tragically cut short when drummer Razzle died in a car accident driven by Vince Neil of Mötley Crüe","Finland had almost no rock scene before Hanoi Rocks — they essentially built it themselves","The raw, garage-punk production here predates the LA glam metal scene by several years"]},
+  "jimi hendrix|hendrix high live and dirty|1978":{studio:"Live recordings — various venues, 1967–1969",producer:"Various",facts:["Posthumous live compilation drawn from unofficial and authorized concert recordings","Released in 1978 — seven years after Hendrix's death in London in 1970","Captures Hendrix at his most incendiary live — the Experience at the height of their powers","Hendrix's live shows were legendary for their unpredictability — he rarely played songs the same way twice","His guitar technique — feedback, whammy bar dives, playing with his teeth — was unlike anything audiences had seen","The album circulated widely among rock fans and collectors before official releases filled in the gaps"]},
+  "jimi hendrix|smash hits|1969":{studio:"Compilation — various studios 1967–1968",producer:"Chas Chandler & Jimi Hendrix",facts:["First compilation of Hendrix's biggest singles — released while he was still alive and at his commercial peak","'Purple Haze', 'Hey Joe', and 'The Wind Cries Mary' defined a generation of guitar playing","Chas Chandler, former bassist of the Animals, discovered Hendrix in a New York club and signed him immediately","Hendrix's technique — whammy bar, feedback control, playing left-handed on a right-handed guitar restrung upside-down — was unprecedented","'All Along the Watchtower' was a Bob Dylan cover that Dylan himself has called the definitive version","The compilation went to #16 in the US and #4 in the UK"]},
+  "joe cocker|greatest hits|1987":{studio:"Compilation — various studios 1968–1986",producer:"Various",facts:["Spans Cocker's career from his raw 1968 debut through his 1980s commercial comeback","'Up Where We Belong' — his #1 duet with Jennifer Warnes for An Officer and a Gentleman — anchors the later half of the collection","Cocker was famous for his spasmodic stage presence — his involuntary movements during performance became iconic after Woodstock","His cover of the Beatles' 'With a Little Help from My Friends' is widely considered the greatest cover version ever recorded","Cocker's voice — ragged, soulful, utterly unique — was impossible to imitate","The compilation introduced new audiences to his back catalog after the massive success of 'Up Where We Belong'"]},
+  "john cougar mellencamp|uh-huh|1983":{studio:"Belmont Mall Studios, Belmont, Indiana",producer:"Don Gehman & John Cougar Mellencamp",facts:["Recorded at Mellencamp's own studio in Indiana — he rarely recorded in Los Angeles or New York by this point","The album that fully announced his heartland rock identity — blue-collar, Midwest, no-nonsense","'Pink Houses' became an accidental anthem — Mellencamp has noted that listeners took the patriotic surface literally when he intended irony","'Authority Song' and 'Crumblin' Down' were also major hits off the album","The first album where he was billed as John Cougar Mellencamp — he was transitioning away from the 'Cougar' name the label had given him","Went 3x platinum in the US"]},
+  "kingdom come|get it on|1988":{studio:"Various studios, Los Angeles",producer:"Bob Rock",facts:["Debut album produced by Bob Rock, who would later produce Metallica's Black Album","Heavily Led Zeppelin-influenced — the resemblance to Zeppelin was so strong that critics called them a tribute act","'Get It On' was a modest hit, and 'What Love Can Be' received strong radio play","Lenny Wolf's vocal style was so close to Robert Plant's that Plant himself commented on the resemblance","Bob Rock's production is slick and radio-ready — a deliberate move toward the mainstream","The album went gold in the US, proving there was still an audience for classic hard rock in the hair metal era"]},
+  "lil durk|the voice of the heroes|2021":{studio:"Various studios, Atlanta & Chicago",producer:"Various",facts:["Collaborative album between Lil Durk and Lil Baby — two of the most dominant voices in drill and trap","The title pays tribute to fallen friends — both artists have experienced significant loss to street violence","Debuted at #1 on the Billboard 200 — a career milestone for both artists","'Voice of the Heroes' was their thesis statement: they're speaking for people with no platform","The album was recorded largely during the pandemic — the isolation informed the album's reflective tone","Features production from some of the most in-demand beatmakers in contemporary hip-hop"]},
+  "luciano pavarotti|o holy night|1976":{studio:"Decca Studios, London",producer:"Michael Haas",facts:["Classic Christmas and sacred song collection from the Italian tenor widely regarded as the greatest of the 20th century","Recorded for Decca Records, who held Pavarotti exclusively and produced many of his finest studio recordings","'O Holy Night' showcases Pavarotti's extraordinary upper register — his high C was considered the finest in the world","Pavarotti came from Modena, Italy, and his Catholic faith informed his approach to sacred music","His teacher, Arrigo Pola, trained him in the bel canto tradition — the art of beautiful singing over dramatic expression","Pavarotti's Three Tenors concerts brought classical singing to a mass audience, but albums like this preserved the purer art form"]},
+  "lynyrd skynyrd|give me back my bullets|1976":{studio:"Criteria Studios, Miami",producer:"Tom Dowd",facts:["First album after the band's commercial breakthrough — recorded at the legendary Criteria Studios in Miami","Tom Dowd had produced Eric Clapton, the Allman Brothers, and Aretha Franklin — he understood Southern rock deeply","The title is a reference to Ronnie Van Zant's belief that the band had softened their sound — he wanted to go rawer","'Double Trouble' and 'Cry for the Bad Man' are among the hardest-edged tracks in their catalog","Reached #20 on the Billboard 200 — a solid commercial performer","Van Zant was adamant about maintaining credibility with working-class audiences — he avoided the trappings of rock stardom"]},
+  "neil diamond|you don't bring me flowers|1978":{studio:"Capitol Studios, Hollywood & Davlen Studio, Los Angeles",producer:"Bob Gaudio & Alter Koek",facts:["The title track began as two separate songs by Neil Diamond and Barbra Streisand — a DJ mixed them together on air and audiences assumed it was a duet","When the impromptu blend became a phenomenon, Diamond and Streisand recorded an official duet that hit #1","Diamond had been a professional songwriter for decades before becoming a recording star — 'Cherry Cherry' and 'Sweet Caroline' were written for others first","His Vegas-style showmanship divided critics but made him one of the best-selling live performers of the era","The album captures Diamond's late-70s polished pop sound at its most commercially refined","Bob Gaudio of the Four Seasons brought his understanding of layered vocal arrangements to the production"]},
+  "pat benatar|pat benatar|1979":{studio:"Cherokee Studios, Hollywood",producer:"Mike Chapman",facts:["Debut album — recorded with British producer Mike Chapman, who had produced Blondie and the Knack","'Heartbreaker' became an immediate AOR radio staple and introduced Benatar as a force in rock","Benatar had classical vocal training — her four-octave range set her apart from every other female rock singer of the era","Her then-boyfriend (later husband) Neil Giraldo played most of the guitar on the album","The album went platinum and established Benatar as one of the defining female rock voices of the decade","Her leather-clad image was partly her own idea, partly the label's — she fought for control of her visual identity from the start"]},
+  "peter frampton|frampton comes alive! (special edition)|1976":{studio:"Live recordings — Winterland, San Francisco; Long Island Arena, New York; Nassau Coliseum, New York",producer:"Peter Frampton & Chris Kimsey",facts:["One of the best-selling live albums in history — over 8 million copies in the US alone","Recorded over several shows in 1975 — the band were tight from constant touring","The talk box on 'Show Me the Way' and 'Do You Feel Like We Do' became one of rock's most imitated sounds","Frampton had been a modest recording success for years — this album made him a superstar almost overnight","The cover photo of Frampton with his Les Paul became one of the most recognized rock images of the 1970s","The success was so overwhelming that Frampton later struggled with the expectations it created"]},
+  "peter frampton & the bee gees|sgt. pepper's lonely hearts club band|1978":{studio:"Various studios",producer:"George Martin",facts:["Soundtrack to the notorious film adaptation of the Beatles' album — produced by the Beatles' own producer George Martin","The film was a commercial and critical disaster, but George Martin's involvement lent it musical credibility","Frampton and the Bee Gees were at the peak of their commercial powers — Frampton Comes Alive and Saturday Night Fever had just redefined pop music","The Bee Gees' Gibb brothers wrote original connecting material for the film alongside the Beatles covers","'Got to Get You Into My Life' by Earth, Wind & Fire was the one genuine hit from the soundtrack","The failure of the film effectively ended Frampton's superstar period — he has spoken candidly about the damage it did to his career"]},
+  "quarterflash|quarterflash|1981":{studio:"Various studios, Portland, Oregon",producer:"John Boylan",facts:["Debut album from the Portland, Oregon band — unusually polished for a regional act","'Harden My Heart' hit #3 on the Billboard Hot 100 and featured Rindy Ross's distinctive sax-and-vocal combination","Rindy Ross playing sax while singing simultaneously was virtually unique in mainstream rock at the time","Produced by John Boylan, who had also worked with Boston on their debut — he understood how to build radio-ready rock","The album went platinum in the US — a remarkable achievement for an act with no established following","The band never quite replicated the commercial success of the debut despite strong subsequent albums"]},
+  "queensrÿche|operation: mindcrime|1988":{studio:"Triad Studios, Redmond, Washington & Sparrow Sound, Seattle",producer:"Peter Collins",facts:["Concept album telling the story of Nikki, a drug addict recruited into a political assassination ring","Produced by Peter Collins, who had worked with Rush — he understood how to make progressive metal accessible","Often cited as one of the greatest concept albums in rock history alongside The Wall and Tommy","'I Don't Believe in Love' was the closest thing to a single and received strong MTV play","The band staged the album as a theatrical performance on tour — an almost theatrical production","Geoff Tate's operatic vocals gave the album a weight that separated Queensrÿche from conventional metal acts"]},
+  "simon & garfunkel|greatest hits|1972":{studio:"Compilation — various studios 1965–1970",producer:"Bob Johnston, Roy Halee & Paul Simon",facts:["Released two years after Simon and Garfunkel split — Columbia cashed in on the catalog immediately","'The Sound of Silence' was the track that launched their career — originally released with electric overdubs without their knowledge","'Mrs. Robinson' was written for the film The Graduate — it helped legitimize pop music as art in the mainstream","Spent over a year on the US charts after release","The collection distilled a decade of extraordinary songwriting into a single LP — one of the most perfect greatest hits packages","Art Garfunkel's voice and Paul Simon's acoustic guitar arrangements remain a gold standard in folk-pop"]},
+  "simon & garfunkel|parsley, sage, rosemary and thyme|1966":{studio:"Columbia Studios, New York",producer:"Bob Johnston",facts:["Third album — widely considered their artistic coming-of-age","'Scarborough Fair / Canticle' wove together a traditional English folk melody with an anti-war counter-melody — a radical compositional idea","'The 59th Street Bridge Song (Feelin' Groovy)' was recorded in one afternoon, half-improvised","Paul Simon had been living in London before this album, absorbing the British folk revival","Bob Johnston's production was simple and uncluttered — the record sounds as alive today as it did in 1966","Reached #4 in the US and helped establish folk rock as a commercially viable format"]},
+  "stevie nicks|rock a little|1985":{studio:"Rumbo Recorders, Canoga Park, California",producer:"Rick Nowels & Stevie Nicks",facts:["Third solo album — recorded during Nicks's most difficult period of addiction struggles","'Talk to Me' became her biggest solo hit, reaching #4 on the Billboard Hot 100","Working with Rick Nowels marked a creative shift — he became one of her most important collaborators","The album has a harder, more synth-driven sound than her earlier solo work","'I Can't Wait' was a solid AOR hit and received heavy MTV play","Nicks has said making this album was painful — she was barely present at times — but the material held up"]},
+  "the babys|union jacks|1980":{studio:"The Record Plant, New York",producer:"Jack Douglas",facts:["Fifth and final studio album from the British-American rock group","Produced by Jack Douglas, who had worked with Aerosmith and John Lennon — his pedigree brought professionalism to the sessions","John Waite's voice was one of the most distinctive in AOR — ragged but precise","'Back on My Feet Again' was a minor hit and extended their radio presence into the new decade","The band featured Ricky Phillips and Jonathan Cain — both would go on to join major acts (Cain to Journey)","The Babys bridged the pub-rock era and arena rock — too polished for punks, too rough for the slick 80s acts coming up"]},
+  "the firm|the firm|1985":{studio:"Compass Point Studios, Nassau, Bahamas & RAK Studios, London",producer:"Jimmy Page & Paul Rodgers",facts:["Supergroup formed by Jimmy Page (Led Zeppelin) and Paul Rodgers (Bad Company) — two of rock's most storied partnerships","'Radioactive' was a top-30 hit and received substantial MTV rotation","Recorded partly at the legendary Compass Point Studios in Nassau — the Bahamas location attracted rock royalty throughout the 1980s","Critics expected a Zeppelin or Bad Company reunion sound — the album was deliberately different from both","Tony Franklin played fretless bass, giving the record an unusual texture for a hard rock album","Page kept his playing understated by Zeppelin standards — deliberately avoiding the shadow of his former band"]},
+  "the outlaws|ghost riders|1980":{studio:"Criteria Studios, Miami",producer:"Bill Szymczyk",facts:["Recorded at Criteria Studios in Miami with Bill Szymczyk, who had produced Hotel California for the Eagles","Includes the band's celebrated version of 'Ghost Riders in the Sky' — the arrangement became their signature","The Outlaws were part of the Southern rock movement centered in Florida, not Georgia — their sound had a distinct Gulf Coast edge","'Ghost Riders in the Sky' dates to 1948 — the Outlaws' hard rock arrangement modernized it for arenas","The album went gold in the US, their most commercially successful period","The guitar work of Hughie Thomasson and Henry Paul was the twin-lead highlight of their sound"]},
+  "the outlaws|wanted!|1977":{studio:"Criteria Studios, Miami",producer:"Paul A. Rothchild & Clive Davis",facts:["Second album — continued the twin-guitar Southern rock sound that made their debut a cult classic","Recorded at Criteria Studios in Miami, where many landmark rock records of the era were made","The Outlaws' reputation as a live act was towering — this album tried to capture that energy","'Freeborn Man' and 'Hurry Sundown' extended their catalog of road-song anthems","They were signed to Arista Records at the time — Clive Davis took a personal interest in Southern rock in the mid-1970s","The album's raw guitar interplay between Thomasson and Paul influenced a generation of Southern rock acts"]},
+  "the power station|the power station|1985":{studio:"The Power Station, New York",producer:"Bernard Edwards & Tony Thompson",facts:["Supergroup formed from members of Duran Duran (Andy and John Taylor) plus Robert Palmer and Chic's Tony Thompson and Bernard Edwards","'Some Like It Hot' and a cover of T. Rex's 'Get It On' were both top-10 hits","Bernard Edwards, co-founder of Chic, produced the album with an iron grip on the groove — the rhythm section is the star","Tony Thompson's drumming was so powerful that it reportedly damaged the studio's walls during recording","The Power Station studio in New York gave the album its name — it was known for its massive, natural reverb","Robert Palmer's laconic vocal delivery was the perfect counterpoint to the band's ferocity"]},
+  "the thompson twins|the best of the thompson twins|1988":{studio:"Compilation — various studios 1982–1988",producer:"Various",facts:["Collects the British new wave trio's biggest hits across their most commercially successful period","'Hold Me Now', 'Doctor! Doctor!', and 'Lay Your Hands on Me' were all top-10 international hits","The Thompson Twins were not actually related — the name came from Tintin's hapless detective duo","Tom Bailey, Alannah Currie, and Joe Leeway formed an image-conscious trio whose videos were as important as the songs","Their sound evolved from post-punk toward polished synth-pop as the decade progressed","The compilation captures a band that understood the mechanics of the pop single as well as anyone in the 1980s"]},
+  "tnt|knights of the new thunder|1984":{studio:"Various studios, Norway",producer:"Various",facts:["Debut album from the Norwegian heavy metal band — one of the first major metal exports from Scandinavia","Tony Harnell's four-octave tenor voice set TNT apart from most of the glam metal acts of the era","The album blends American hard rock influences with a melodic sensibility rooted in Scandinavian pop","Ronni Le Tekrø's guitar work was technically extraordinary — he was routinely cited among the finest players of the era","The band became a cult favorite in Japan before breaking in Europe and the US","'Knights of the New Thunder' established that Scandinavia could produce world-class heavy rock"]},
+  "waylon jennings|greatest hits|1979":{studio:"Compilation — various studios 1973–1979",producer:"Various",facts:["One of the best-selling country compilations of the era — went 4x platinum in the US","'Mammas Don't Let Your Babies Grow Up to Be Cowboys' — his duet with Willie Nelson — was the defining outlaw country anthem","Waylon was the central figure in the outlaw country movement — he fought for and won the right to produce his own records","'Are You Ready for the Country' and 'Luckenbach, Texas' captured the sound of the Texas honky-tonk scene perfectly","Waylon wore all black before Johnny Cash made it a statement — he was fundamentally anti-Nashville establishment","The collection defined outlaw country for an entire generation and remains the entry point for new listeners"]},
+  "whitesnake|whitesnake|1987":{studio:"Little Mountain Sound Studios, Vancouver & Musicland Studios, Munich",producer:"Keith Olsen & Mike Stone",facts:["Breakthrough album — completely re-recorded from an earlier British version with an entirely different lineup","'Here I Go Again' and 'Is This Love' were both top-10 US hits","David Coverdale's then-girlfriend Tawny Kitaen starred in the videos — they became some of the most-played clips in early MTV history","Coverdale rebuilt the entire band for the US market — only he and guitarist Adrian Vandenberg remained from previous lineups","Steve Vai and Vivian Campbell played guitar on different tracks — two of the finest guitar technicians of the era","The album sold 8 million copies in the US alone"]},
+  "willie nelson|always on my mind|1982":{studio:"Woodland Sound Studios, Nashville",producer:"Chips Moman",facts:["Recorded with Chips Moman — the same producer behind Elvis's Memphis renaissance in 1969","'Always on My Mind' had been recorded by Brenda Lee and Elvis Presley before Nelson — his version became the definitive one","The album won three Grammy Awards including Country Album of the Year and Song of the Year","Nelson had already been an outlaw country icon for years — this album brought him fully into the pop mainstream","The Pet Shop Boys covered 'Always on My Mind' in 1987 — a measure of the song's cross-genre resonance","Chips Moman's production is unusually polished for a Nelson record — the strings give it a timeless ballad quality"]},
+  "y&t|contagious|1987":{studio:"Record One Studios, Los Angeles",producer:"Barry Goldberg",facts:["Seventh studio album from the San Francisco hard rock act","'Contagious' received strong AOR and MTV play — a more polished sound than their earlier work","Y&T stood for 'Yesterday and Today' — a name that reflected their classic rock roots in an era of hair metal","Dave Meniketti's guitar work and vocals were the consistent core across multiple lineup changes","The band were a Bay Area institution before the metal scene moved to Los Angeles — they never quite got the mainstream break they deserved","Their live reputation in the Bay Area was legendary — arenas sold out even when album sales were modest"]},
+  "blackbird|moses jones|1975":{studio:"Unknown studio",producer:"Unknown",facts:["Obscure album from a Classic Rock act of the same era","Limited information survives in public archives — the record is notable primarily as a vinyl collector's item","The mid-1970s produced dozens of regional rock bands that released one or two albums and dissolved without wider recognition","'Moses Jones' may reference American folk and blues traditions common in rock albums of that period","The album's inclusion in this collection suggests it was acquired through browsing — a hallmark of serious crate digging","Condition and label details would help identify the exact pressing and origin"]},
+  "various artists|saturday night fever (soundtrack)|1977":{studio:"Various studios — primarily Middle Ear Studios, Miami",producer:"The Bee Gees, Karl Richardson & Albhy Galuten",facts:["Soundtrack to the John Travolta film that defined the disco era","One of the best-selling soundtracks in history — over 40 million copies sold worldwide","The Bee Gees wrote and recorded five original songs for the film in a single week","'Stayin' Alive' and 'Night Fever' both hit #1 in the US — both in the same year","Barry Gibb, Robin Gibb, and Maurice Gibb recorded their vocals in staggered shifts to maintain the energy","The album fundamentally changed the Bee Gees' career — they were seen as a middle-tier act before this; afterward they were superstars"]},
+  "various artists|golden christmas favorites|1970":{studio:"Various studios",producer:"Various",facts:["Holiday compilation collecting classic Christmas standards from the golden age of American seasonal recordings","The 1970s saw a boom in budget holiday compilations as labels maximized catalog value at Christmas","Traditional songs like 'White Christmas' and 'O Holy Night' are perennial performers that sustain annual sales decades after recording","The era's production style — lush orchestral arrangements, warm reverb — gave these compilations a comforting, timeless feel","Holiday records occupy a unique place in vinyl culture — they're often found in perfect condition because they were played only one month a year","These compilations were staples of the seasonal gift-giving economy before streaming playlists replaced them"]},
+  "cruisin|5 lp set|1970":{studio:"Various studios",producer:"Various",facts:["The Cruisin' series reproduced original radio broadcasts from rock and roll's formative years alongside the hit songs of each year","Each LP in the set recreates a specific year — a time capsule of American Top 40 radio","The sets featured recreated DJ patter from iconic disc jockeys of the era alongside original recordings","One of the most ambitious archival projects in pop history — capturing radio culture as much as music","The series ran from 1955 through the early 1970s, preserving the full arc of rock and roll's rise","A rare collectible — the sets are sought by music historians and vinyl enthusiasts alike"]},
 };
+
 
 function buildAboutTab(id){
   const a=vinylCollection.find(x=>x.id===id);
@@ -1270,7 +1630,8 @@ function buildAboutTab(id){
   if(!a){container.innerHTML="<p style='color:var(--cream-dim);font-size:13px;padding:8px'>No album selected.</p>";return}
 
   const key=`${a.artist}|${a.title}|${a.year}`.toLowerCase();
-  const data=ALBUM_FACTS[key];
+  const keyNoYear=`${a.artist}|${a.title}`.toLowerCase();
+  const data=ALBUM_FACTS[key]||ALBUM_FACTS[keyNoYear];
 
   if(!data){
     // Generic display for albums not in the database
@@ -1338,14 +1699,87 @@ document.getElementById("spinModal").addEventListener("click",e=>{if(e.target===
 document.getElementById("spinAgain").addEventListener("click",doSpin);
 
 // ── ADD ALBUM MODAL ──
-document.getElementById("addAlbumBtn").addEventListener("click",()=>{document.getElementById("addModal").classList.add("open");document.getElementById("addSearchInput").focus()});
-document.getElementById("addClose").addEventListener("click",()=>{document.getElementById("addModal").classList.remove("open");document.getElementById("searchResultsList").innerHTML="";document.getElementById("addSearchInput").value=""});
+document.getElementById("formGenre").addEventListener("change",function(){
+  if(this.value==="__custom__"){
+    const name=prompt("Enter new genre name:");
+    if(name&&name.trim()){
+      const g=name.trim();
+      if(!customGenres.includes(g)){customGenres.push(g);saveCustomGenres();}
+      // Add to this select
+      const o=new Option(g,g,true,true);
+      this.insertBefore(o,this.querySelector('[value="__custom__"]'));
+      this.value=g;
+    } else {
+      this.value="Classic Rock";
+    }
+  }
+});
+
+// Refresh formGenre options to include any saved custom genres
+function refreshFormGenre(){
+  const sel=document.getElementById("formGenre");
+  const customOpt=sel.querySelector('[value="__custom__"]');
+  customGenres.forEach(g=>{
+    if(!sel.querySelector(`option[value="${g}"]`)){
+      const o=new Option(g,g);sel.insertBefore(o,customOpt);
+    }
+  });
+}
+
+document.getElementById("addAlbumBtn").addEventListener("click",()=>{
+  refreshFormGenre();
+  document.getElementById("addModal").classList.add("open");
+  document.getElementById("addSearchInput").focus();
+});
+document.getElementById("addClose").addEventListener("click",()=>{document.getElementById("addModal").classList.remove("open");document.getElementById("searchResultsList").innerHTML="";document.getElementById("addSearchInput").value="";closeAutocomplete("addAutoDropdown")});
 document.getElementById("addModal").addEventListener("click",e=>{if(e.target===document.getElementById("addModal"))document.getElementById("addModal").classList.remove("open")});
 document.getElementById("addSearchInput").addEventListener("keydown",e=>{if(e.key==="Enter")searchAlbums()});
 
+// ── AUTOCOMPLETE ENGINE ──
+function closeAutocomplete(dropId){const d=document.getElementById(dropId);if(d)d.classList.remove("open")}
+
+function buildAcDropdown(dropEl,results,onSelect,mode="crate"){
+  if(!results||!results.length){dropEl.classList.remove("open");return}
+  dropEl.innerHTML=results.map((item,i)=>{
+    const isDup=albumExistsInCrate(item.artistName||"",item.collectionName||"");
+    const badge=isDup?`<span class="ac-action" style="color:var(--gold)">✓ in crate</span>`:`<span class="ac-action">＋ ${mode==="want"?"Wish":"Add"}</span>`;
+    return `<div class="ac-row" data-idx="${i}">\
+<img class="ac-thumb" src="${item.artworkUrl60||''}" alt="">\
+<div class="ac-info"><div class="ac-title">${escAttr(item.collectionName||'Unknown')}</div><div class="ac-meta">${escAttr(item.artistName||'')} · ${item.releaseDate?item.releaseDate.slice(0,4):''}</div></div>\
+${badge}</div>`;
+  }).join("");
+  dropEl.classList.add("open");
+  dropEl.querySelectorAll(".ac-row").forEach(row=>{
+    row.addEventListener("mousedown",e=>{e.preventDefault();onSelect(results[+row.dataset.idx])});
+  });
+}
+
+// Debounce util
+function debounce(fn,ms){let t;return(...a)=>{clearTimeout(t);t=setTimeout(()=>fn(...a),ms)}}
+
+// ── LIVE SEARCH FOR ADD MODAL ──
+const addDebounce=debounce(async(q)=>{
+  if(q.length<2){closeAutocomplete("addAutoDropdown");return}
+  const drop=document.getElementById("addAutoDropdown");
+  drop.innerHTML=`<div class="ac-spinner">Searching…</div>`;drop.classList.add("open");
+  try{
+    const r=await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(q)}&entity=album&limit=8`);
+    const d=await r.json();
+    buildAcDropdown(drop,d.results||[],(item)=>{
+      addAlbumFromSearch(item,albumExistsInCrate(item.artistName||"",item.collectionName||""));
+      closeAutocomplete("addAutoDropdown");
+      document.getElementById("addSearchInput").value="";
+    },"crate");
+  }catch{drop.classList.remove("open")}
+},380);
+
+document.getElementById("addSearchInput").addEventListener("input",e=>addDebounce(e.target.value.trim()));
+document.getElementById("addSearchInput").addEventListener("blur",()=>setTimeout(()=>closeAutocomplete("addAutoDropdown"),200));
+
+function normalizeStr(s){return s.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim().replace(/[^a-z0-9 ]/g," ").replace(/\s+/g," ").trim()}
 function albumExistsInCrate(artist,title){
-  const na=artist.toLowerCase().trim(),nt=title.toLowerCase().trim();
-  return vinylCollection.some(a=>a.artist.toLowerCase().trim()===na&&a.title.toLowerCase().trim()===nt);
+  const na=normalizeStr(artist),nt=normalizeStr(title);
+  return vinylCollection.some(a=>normalizeStr(a.artist)===na&&normalizeStr(a.title)===nt);
 }
 
 async function searchAlbums(){
@@ -1402,7 +1836,9 @@ function addManualAlbum(){
   const artist=document.getElementById("formArtist").value.trim(),title=document.getElementById("formTitle").value.trim();
   if(!artist||!title){showToast("Artist and title are required");return}
   const year=parseInt(document.getElementById("formYear").value)||new Date().getFullYear();
-  const album={id:nextId++,artist,title,year,genre:document.getElementById("formGenre").value,condition:document.getElementById("formCondition").value,decade:Math.floor(year/10)*10};
+  let genre=document.getElementById("formGenre").value;
+  if(genre==="__custom__"){showToast("Pick or create a genre first");return}
+  const album={id:nextId++,artist,title,year,genre,condition:document.getElementById("formCondition").value,decade:Math.floor(year/10)*10};
   vinylCollection.push(album);const ua=lsGet("crate_user_albums",[]);ua.push(album);lsSet("crate_user_albums",ua);
   buildFilters();render();
   document.getElementById("addModal").classList.remove("open");
@@ -1415,6 +1851,31 @@ document.getElementById("wantListBtn").addEventListener("click",()=>{document.ge
 document.getElementById("wantlistClose").addEventListener("click",()=>document.getElementById("wantlistModal").classList.remove("open"));
 document.getElementById("wantlistModal").addEventListener("click",e=>{if(e.target===document.getElementById("wantlistModal"))document.getElementById("wantlistModal").classList.remove("open")});
 document.getElementById("wantTitleInput").addEventListener("keydown",e=>{if(e.key==="Enter")addWantItem()});
+
+// ── LIVE SEARCH FOR WANTLIST ──
+const wantDebounce=debounce(async()=>{
+  const artist=document.getElementById("wantArtistInput").value.trim();
+  const title=document.getElementById("wantTitleInput").value.trim();
+  const q=(artist+" "+title).trim();
+  if(q.length<2){closeAutocomplete("wantAutoDropdown");return}
+  const drop=document.getElementById("wantAutoDropdown");
+  drop.innerHTML=`<div class="ac-spinner">Searching…</div>`;drop.classList.add("open");
+  try{
+    const r=await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(q)}&entity=album&limit=8`);
+    const d=await r.json();
+    buildAcDropdown(drop,d.results||[],(item)=>{
+      // Auto-fill fields when user picks from dropdown
+      document.getElementById("wantArtistInput").value=item.artistName||"";
+      document.getElementById("wantTitleInput").value=item.collectionName||"";
+      document.getElementById("wantYearInput").value=item.releaseDate?item.releaseDate.slice(0,4):"";
+      closeAutocomplete("wantAutoDropdown");
+    },"want");
+  }catch{drop.classList.remove("open")}
+},380);
+
+document.getElementById("wantTitleInput").addEventListener("input",wantDebounce);
+document.getElementById("wantArtistInput").addEventListener("input",wantDebounce);
+document.getElementById("wantTitleInput").addEventListener("blur",()=>setTimeout(()=>closeAutocomplete("wantAutoDropdown"),200));
 
 async function addWantItem(){
   const artist=document.getElementById("wantArtistInput").value.trim();
@@ -1444,7 +1905,7 @@ function moveWantToCrate(id){
 function renderWantList(){
   const list=document.getElementById("wantlistList"),count=document.getElementById("wantlistCount");
   count.textContent=wantList.length===1?"1 record":`${wantList.length} records`;
-  if(!wantList.length){list.innerHTML=`<div class="wantlist-empty">📋 Your want list is empty.<br>Add albums you're hunting for.</div>`;return}
+  if(!wantList.length){list.innerHTML=`<div class="wantlist-empty">🎯 Your wish list is empty.<br>Add albums you're hunting for.</div>`;return}
   list.innerHTML=wantList.map(item=>`
     <div class="want-item">
       <img class="want-item-art" src="${escAttr(item.artUrl||getPlaceholder('default'))}" alt="">
@@ -1633,7 +2094,6 @@ document.getElementById("statsModal").addEventListener("click",e=>{if(e.target==
 
 // ── GLOBAL CONTROLS ──
 document.getElementById("searchInput").addEventListener("input",e=>{state.search=e.target.value;render()});
-document.getElementById("genreFilter").addEventListener("change",e=>{state.genre=e.target.value;render()});
 document.getElementById("decadeFilter").addEventListener("change",e=>{state.decade=e.target.value;render()});
 document.getElementById("favFilterBtn").addEventListener("click",function(){state.favOnly=!state.favOnly;this.classList.toggle("active",state.favOnly);render()});
 document.querySelectorAll(".sort-btn").forEach(btn=>{btn.addEventListener("click",()=>{document.querySelectorAll(".sort-btn").forEach(b=>b.classList.remove("active"));btn.classList.add("active");state.sort=btn.dataset.sort;render()})});
@@ -1647,6 +2107,9 @@ function showToast(msg){
 }
 
 // ── INIT ──
+// Always apply Discogs overrides — they win over any cached iTunes URLs
+Object.entries(DISCOGS_COVERS).forEach(([k,url])=>{ caaCache[k]=url; });
+saveCaaCache();
 buildFilters();render();
 </script>
 </body>
